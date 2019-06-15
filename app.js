@@ -12,8 +12,8 @@ const express = require('express'),
 	  {check, validationResult} = require('express-validator/check'),
 	  _ = require('underscore');
 
-// ROUTES
-// ========
+// SETUP ROUTES
+// ===============
 const indexRoutes = require('./routes/index'),
 	  jobRoutes = require('./routes/jobs'),
 	  userRoutes = require('./routes/users');
