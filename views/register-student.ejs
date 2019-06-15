@@ -1,0 +1,101 @@
+<% include partials/header %>
+
+<div class="container">
+	<form action="/register/student" method="POST">
+		<h2 class="text-center mb-0 font-weight-light"><i class="fas fa-user-graduate"></i> Student Registration</h2>
+		<hr>
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label>Email</label>
+				<input type="email" class="form-control" name="email" placeholder="Email" required>
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputPassword4">Password <small class="font-weight-light">(min. 5 characters)</small></label>
+				<input type="password" class="form-control" name="password" placeholder="Password" required>
+			</div>
+		</div>
+		
+		<div class="form-row">
+			<div class="form-group col-md-4">
+				<label>First Name</label>
+				<input type="text" class="form-control" name="firstName" placeholder="First name" required>
+			</div>
+			<div class="form-group col-md-4">
+				<label>Middle Name</label>
+				<input type="text" class="form-control" name="middleName" placeholder="Middle name">
+			</div>
+			<div class="form-group col-md-4">
+				<label>Last Name</label>
+				<input type="text" class="form-control" name="lastName" placeholder="Last name" required>
+			</div>
+		</div>
+		
+		<div class="form-row">
+			<div class="form-group col-md-4">
+				<label>School</label>
+				<select class="form-control" name="school" required>
+					<option value="The University of British Columbia (UBC)">The University of British Columbia (UBC)</option>
+					<option value="Simon Fraser University (SFU)">Simon Fraser University (SFU)</option>
+				</select>
+			</div>
+			<div class="form-group col-md-4">
+				<label>Faculty</label>
+				<select class="form-control" name="faculty" required>
+					<option value="Arts">Arts</option>
+					<option value="Science">Science</option>
+				</select>
+			</div>
+			<div class="form-group col-md-4">
+				<label>Major</label>
+				<select class="form-control" name="major" required>
+					<option value="Computer Science">Computer Science</option>
+					<option value="Cognitive Systems">Cognitive Systems</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label>Expected Graduation</label>
+			<select class="form-control" name="graduation" required>
+				<% for(let i=0; i < 10; i++) { %>
+					<option value="<%=moment().add(i, 'Y').format('YYYY')%>"><%=moment().add(i, 'Y').format('YYYY')%></option>
+				<% } %>
+			</select>
+		</div>
+		
+		<button type="submit" class="btn btn-outline-primary">Sign Up</button>
+	</form>
+</div>
+
+
+
+<!-- <div class="row justify-content-center">
+	<div class="col-md-4">
+		<form action="/register/student" method="POST">
+			<h2 class="text-center mb-4"><i class="fas fa-user-graduate"></i> Student Registration</h2>
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<div class="input-group-text"><i class="fas fa-envelope"></i></div>
+					</div>
+					<input type="email" class="form-control" name="email" placeholder="Email">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<div class="input-group-text"><i class="fas fa-unlock-alt"></i></div>
+					</div>
+					<input type="password" class="form-control" name="password" placeholder="Password">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<button class="btn btn-outline-primary btn-block">Sign Up</button>
+			</div>
+		</form>	
+	</div>
+</div> -->
+
+<% include partials/footer %>

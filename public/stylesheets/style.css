@@ -1,0 +1,21 @@
+.dropdown-menu .dropdown-item:hover {
+	background-color: #007BFF;
+	color: white;
+}
+
+.save-status {
+	display: none;
+}
+
+.navbar {
+	background-color: #563D7C
+}
+
+.selectAuth:hover {
+	background-color: #007BFF;
+	color: white;
+}
+
+#companyName {
+	font-size: 1.8rem;
+}

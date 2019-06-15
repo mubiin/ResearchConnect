@@ -1,0 +1,149 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<%= user._id %>
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" 
+			aria-selected="true">Profile</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="saved-jobs-tab" data-toggle="tab" href="#saved-jobs" role="tab" aria-controls="saved-jobs" 
+			aria-selected="false">Saved Jobs</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="applications-tab" data-toggle="tab" href="#applications" role="tab" aria-controls="applications" 
+			aria-selected="false">Applications</a>
+		</li>
+	</ul>
+	
+	<div class="tab-content" id="myTabContent">
+		<div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+			
+			<a href="profile/edit" class="btn btn-outline-primary btn-block my-3">Edit Profile</a>
+
+			<div class="row mt-3">
+				<div class="col-md-4">
+					<p class="lead font-weight-bold mb-0">Full name:</p>
+					<p class="lead"><%= user.firstName + " " + user.middleName + " " + user.lastName %></p>
+				</div>
+
+				<div class="col-md-4">
+					<p class="lead font-weight-bold mb-0">Email:</p>
+					<p class="lead"><%= user.email %></p>
+				</div>
+				
+				<div class="col-md-4">
+					<p class="lead font-weight-bold mb-1">Resume:</p>
+					<% if (user.resume.data) { %>
+						<a class="lead" href="/profile/resume">View Resume</a>
+					<% } else { %>
+						<p class="lead">N/A</p>
+					<% } %>
+				</div>
+				
+				<div class="col-12">
+					<hr>
+				</div>
+				
+				<div class="col-md-12 text-center">
+					<p class="lead font-weight-bold mb-0">School:</p>
+					<p class="lead"><%= user.school %></p> 
+				</div>
+
+				<div class="col-md-4 text-center">
+					<p class="font-weight-bold mb-0">Faculty:</p>
+					<p class="lead mb-0"><%= user.faculty %></p>
+					<hr>
+				</div>
+				
+				<div class="col-md-4 text-center">
+					<p class="font-weight-bold mb-0">Major:</p>
+					<p class="lead mb-0"><%= user.major %></p>		
+					<hr>
+				</div>
+				
+				<div class="col-md-4 text-center">
+					<p class="font-weight-bold mb-0">Graduation:</p>
+					<p class="lead mb-0"><%= moment(user.graduation).format('YYYY') %></p>
+					<hr>
+				</div>
+			</div>
+		</div>
+		
+		<div class="tab-pane fade" id="saved-jobs" role="tabpanel" aria-labelledby="saved-jobs-tab">
+			<div class="list-group my-4">
+				<% user.jobsSaved.reverse(); user.jobsSaved.forEach((job) => { %>
+					<a href="/jobs/<%= job._id %>" class="list-group-item list-group-item-action">
+						<div class="d-flex w-100 justify-content-between">
+							
+								<h5 class="mb-0"><%= job.role %> 
+									
+								</h5>
+							
+							<small>Application Deadline: 
+								<span class="font-weight-light">
+									<%= moment(job.deadline).format("MMM Do, YYYY") %>
+								</span>
+							</small>
+						</div>
+						<p class="lead mb-0"><%= job.company %></p>
+						<form class="form-inline d-flex justify-content-between">
+							<span><%= job.location %></span>
+							<button class="btn btn-outline-info btn">Unsave</button>
+						</form>	
+						
+						
+					</a>
+				<% }); %>
+			</div>
+		</div>
+		
+
+		<div class="tab-pane fade" id="applications" role="tabpanel" aria-labelledby="applications-tab">
+			<div class="list-group my-4">
+				<% user.jobsApplied.reverse(); user.jobsApplied.forEach((job) => { %>
+					<a href="/jobs/<%= job._id %>" class="list-group-item list-group-item-action">
+						<div class="d-flex w-100 justify-content-between">
+							<h5 class="mb-0"><%= job.role %> 
+								
+							</h5>
+							
+						</div>
+						<p class="lead mb-0"><%= job.company %></p>
+						<p><%= job.location %></p>	
+						
+						<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/resume" method="GET" class="form-group mb-2">
+									<button class="btn btn-outline-success btn-sm">
+										Resume
+									</button>
+								</form>
+								
+								<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/cover-letter" method="GET" 
+									  class="form-group mb-0 w-100 d-inline-flex justify-content-between">
+									<button class="btn btn-outline-success btn-sm">
+										Cover Letter
+									</button>
+									<span class="align-self-center">
+										<% var currStatus = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).status; 
+										var txtColor = "";
+										if (currStatus == "Accepted")
+											txtColor = "text-success";
+										if (currStatus == "Rejected")
+											txtColor = "text-danger";
+										if (currStatus == "Waitlisted")
+											txtColor = "text-primary";
+										%>
+										Status: <span class="<%= txtColor %> font-weight-bold"><%= currStatus %></span>
+									</span>
+								</form>
+					</a>
+				<% }); %>
+			</div>
+		</div>
+		
+	</div>
+	
+</div>
+
+<% include ../partials/footer %>

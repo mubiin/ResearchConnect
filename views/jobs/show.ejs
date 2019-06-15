@@ -1,0 +1,78 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-12 mb-4">
+			<div class="card">
+				<div class="card-header pb-0 pb-md-2">
+					<h3 class="mb-0">
+						<%= job.role %> 
+						
+						<% if (currentUser && currentUser.isEmployer == false) { %>
+							<% if (!appliedAlready) { %>
+								<a href="/jobs/<%= job._id %>/apply" class="btn btn-outline-primary float-right mx-1 mx-md-3">Apply</a>
+							<% } else { %>
+								<a href="/jobs/<%= job._id %>/apply" 
+								   class="btn btn-outline-primary float-right mx-1 mx-md-3 disabled">Applied</a>
+							<% } %>
+							
+							<% if (!savedAlready) { %>
+								<a href="/jobs/<%= job._id %>/save" class="btn btn-outline-primary float-right">Save</a>
+							<% } else { %>
+								<a href="/jobs/<%= job._id %>/unsave" class="btn btn-outline-primary float-right">Unsave</a>
+							<% } %>
+						<% } %>
+						
+						<% if (isAuthorized) { %>
+							<a href="/jobs/<%= job._id %>/edit" class="btn btn-outline-primary float-right align-self-start mx-3">Edit</a>
+						<% } %>
+					</h3>
+					
+					<p class="lead mb-0"><%= job.company %></p>
+					<p><%= job.location %></p>
+					<p class="mb-0">
+						<span class="font-weight-normal">Posted on: </span>
+						<span class="font-weight-light"><%= moment(job.createdAt).format("MMM Do, YYYY") %></span>
+					</p>
+					
+					<p class="mb-2">
+						<span class="font-weight-normal">Application Deadline: </span>
+						<span class="font-weight-light">
+							<%= moment(job.deadline).format("MMM Do, YYYY") %>
+						</span>
+						<% if (status != "") { 
+							var txtColor = "";
+							if (status == "Accepted")
+								txtColor = "text-success";
+							if (status == "Rejected")
+								txtColor = "text-danger";
+							if (status == "Waitlisted")
+								txtColor = "text-primary";
+						} 
+						if (appliedAlready) { %>
+							<p class="mb-0">
+								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/resume" class="btn btn-outline-success">Resume</a>
+								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/cover-letter" 
+								   class="btn btn-outline-success">Cover Letter</a>
+								<p class="float-md-right mt-2 mt-md-0 mb-1">Status: <span class="<%=txtColor%>"><%=status%></span> </p>
+							</p>
+						<% } %>
+				</div>
+
+				<div class="card-body">
+					<h5 class="mb-0">Job Description:</h5>
+					<p class="lead"><%= job.workLoad %></p>
+					<hr>
+					<p><%- job.description %></p>
+					<% if (isAuthorized) { %>
+						<form action="/jobs/<%=job._id%>?_method=DELETE" method="POST" id="delete" class="float-right">
+							<button class="btn btn-outline-danger">Delete</button>
+						</form>							
+					<% } %>
+				</div>
+			</div>
+			
+		</div>
+</div>
+
+<% include ../partials/footer %> 

@@ -1,0 +1,71 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<h4 class="mb-0"><%= job.role %></h4>
+	<p class="lead mb-0"><%= job.company %></p>
+	<p><%= job.location %></p>	
+	<hr>
+	<p class="lead mb-2">Applicants:</p>
+	
+	<table class="table table-striped">
+	<thead class="thead-dark">
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Full name</th>
+			<th scope="col">Resume</th>
+			<th scope="col">Cover Letter</th>
+			<th scope="col">Change Status <small>(one at a time)</small></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% var i=1; job.applicants.forEach((applicant) => { 
+			var txtColor=""; 
+			if (applicant.status == "Accepted")
+				txtColor = "text-success";
+			if (applicant.status == "Rejected")
+				txtColor = "text-danger";
+			if (applicant.status == "Waitlisted")
+				txtColor = "text-primary"; 
+			%>
+			<form action="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/update-status" method="POST" class="form-horizontal">
+				<tr>
+					<th scope="row"><%= i %></th>
+					<td>
+						<%= applicant.fullName %> 
+						<p> <small><em> <%= applicant.email %> </em></small> </p>
+					</td>
+					<td><a href="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/resume">View Resume</a></td>
+					<td><a href="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/cover-letter">View Cover Letter</a></td>
+					<td>
+						<select class="form-control change-status" name="status">
+							<option value="In progress" <% if (txtColor == "") { %> selected <% } %>>
+								In progress
+							</option>
+							
+							<option class="text-primary" value="Waitlisted" <% if (txtColor == "text-primary") { %> selected <% } %>>
+								Waitlisted
+							</option>
+							
+							<option class="text-success" value="Accepted" <% if (txtColor == "text-success") { %> selected <% } %>>
+								Accepted
+							</option>
+							
+							<option class="text-danger" value="Rejected" <% if (txtColor == "text-danger") { %> selected <% } %>>
+								Rejected
+							</option>
+						</select>
+						<button class="btn btn-outline-primary float-right mt-2 save-status">
+							Save
+						</button>
+						<small class="float-left">Status: <span class="<%= txtColor %>"><%= applicant.status %></span></small>
+					</td>
+				</tr>				
+			</form>
+			
+		<% i+=1; }); %>
+	</tbody>
+</table>
+</div>
+
+
+<% include ../partials/footer %>

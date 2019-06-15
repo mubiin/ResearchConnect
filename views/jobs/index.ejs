@@ -1,0 +1,51 @@
+<% include ../partials/header %> 
+
+<% var searchQuery = "";
+if (search) {
+	searchQuery = "search="+search+"&";
+} %>
+
+
+<div class="container">
+	<h2>
+		Browse jobs: 
+	</h2>
+	<hr>
+	<div class="row">
+		<% jobs.forEach((job) => { %>
+		<div class="col-md-4 col-lg-3 mb-4">
+			<div class="card h-100">
+				<div class="card-header h-100">
+					<h5 class="mb-0"><%= job.company %></h5>
+					<p><%= job.location %></p>
+				</div>
+
+				<div class="card-body h-100">
+					<h5 class="card-title mb-0"><%= job.role %></h5>
+					<p class="lead"><%= job.workLoad %></p>
+					<p class="font-weight-light"><%= moment(job.createdAt).fromNow() %></p>
+					<hr>
+					<a href="/jobs/<%= job._id %>" class="btn btn-primary">More Info</a>
+				</div>
+			</div>	
+		</div>
+		<% }); %>
+	</div>
+	<hr>
+	<nav>
+		<ul class="pagination justify-content-center m-1">
+			<!-- <span class="lead mr-2 align-self-center">Pages:</span> -->
+			<% for(var i=1; i <= pages; i++) { 
+				var active = ""; if (i == currPage) active = "active"; %>
+				<li class="page-item <%=active%>">
+				<a class="page-link" href="/jobs?<%=searchQuery%>p=<%= i %>">
+					<%= i %>
+				</a>
+			</li>
+			<% } %>	
+		</ul>
+	</nav>
+</div>
+
+
+<% include ../partials/footer %>

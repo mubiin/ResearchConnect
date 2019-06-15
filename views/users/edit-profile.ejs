@@ -1,0 +1,97 @@
+<% include ../partials/header %>
+
+<div class="container mb-4">
+	<div class="row justify-content-center">
+		<div class="col-md-10">
+			<form action="/profile/edit" enctype="multipart/form-data" method="POST">
+				<h2 class="text-center mb-4"><i class="fas fa-user-graduate"></i> Edit Profile </h2>
+				<hr>
+				<div class="form-row">
+					<div class="form-group col-md-12">
+						<label>Email</label>
+						<input type="email" class="form-control" name="user[email]" placeholder="Email" value="<%=user.email%>" required>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label>First Name</label>
+						<input type="text" class="form-control" name="user[firstName]" placeholder="First name" 
+							   value="<%=user.firstName%>" required>
+					</div>
+					<div class="form-group col-md-4">
+						<label>Middle Name</label>
+						<input type="text" class="form-control" name="user[middleName]" placeholder="Middle name" value="<%=user.middleName%>">
+					</div>
+					<div class="form-group col-md-4">
+						<label>Last Name</label>
+						<input type="text" class="form-control" name="user[lastName]" placeholder="Last name" 
+							   value="<%=user.lastName%>" required>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label>School</label>
+						<select class="form-control" name="user[school]" required>
+							<option value="The University of British Columbia (UBC)" 
+									<% if(user.school == "The University of British Columbia (UBC)") { %> selected <% } %> >
+								The University of British Columbia (UBC)
+							</option>
+							<option value="Simon Fraser University (SFU)"
+								<% if(user.school == "Simon Fraser University (SFU)") { %> selected > <% } %>
+								Simon Fraser University (SFU)</option>
+						</select>
+					</div>
+					<div class="form-group col-md-4">
+						<label>Faculty</label>
+						<select class="form-control" name="user[faculty]" required>
+							<option value="Arts" <% if(user.faculty=="Arts") { %> selected <% } %>> Arts </option>
+							<option value="Science" <% if(user.faculty=="Science") { %> selected <% } %>>Science</option>
+						</select>
+					</div>
+					<div class="form-group col-md-4">
+						<label>Major</label>
+						<select class="form-control" name="user[major]" required>
+							<option value="Computer Science" <% if(user.major=="Computer Science") { %> selected <% } %>>
+								Computer Science</option>
+							<option value="Cognitive Systems" <% if(user.major=="Cognitive Systems") { %> selected <% } %>>
+								Cognitive Systems</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label>Expected Graduation</label>
+					<select class="form-control" name="user[graduation]" required>
+						<% for(let i=0; i < 10; i++) {
+							var val = moment().add(i, 'Y').format('YYYY'); %>
+						<option value="<%= val %>" <% if(moment(user.graduation).format('YYYY') == val) { %> selected <% } %>>
+							<%=val%>
+						</option>
+						<% } %>
+					</select>
+				</div>
+				
+				<div class="input-group my-4">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="inputGroupFileAddon01">Resume</span>
+					</div>
+					<div class="custom-file">
+						<input type="file" class="custom-file-input" name="resume" id="inputGroupFile01" 
+							   aria-describedby="inputGroupFileAddon01">
+						<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col-md-3">
+						<button type="submit" class="btn btn-outline-primary btn-block">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<% include ../partials/footer %>

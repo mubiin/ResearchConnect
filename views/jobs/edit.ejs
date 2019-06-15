@@ -1,0 +1,68 @@
+<% include ../partials/header %>
+
+<% var activeFull, activePart, checkFull, checkPart;
+if (job.workLoad == "Full-time") {
+	activeFull = "active";
+	checkFull = "checked";
+	activePart = ""
+	checkPart = "";
+} else {
+	activeFull = "";
+	checkFull = "";
+	activePart = "active"
+	checkPart = "checked";
+} %>
+
+<div class="container border rounded py-4 px-5">
+	<form action="/jobs/<%=job._id%>?_method=PUT" method="POST">
+		<p class="display-4 text-center">
+			Edit Posting
+		</p>
+		<hr>
+		<div class="form-group">
+			<label class="lead">Institution Name:</label>
+			<input type="text" name="job[company]" class="form-control" placeholder="Institution Name" value="<%= job.company %>" required>
+		</div>
+		
+		<div class="form-row">
+			<div class="col-md-4 mb-3">
+				<label class="lead">Location:</label>
+				<input type="text" name="job[location]" class="form-control" placeholder="e.g. Vancouver, BC" 
+					   value="<%= job.location %>" required>
+			</div>
+			<div class="col-md-4 mb-3">
+				<label class="lead">Job role:</label>
+				<input type="text" name="job[role]" class="form-control" placeholder="Job title" value="<%= job.role %>" required>
+			</div>
+			<div class="col-md-4 mb-3">
+				<label class="lead">Application Deadline:</label>
+				<input type="date" name="job[deadline]" class="form-control" value="<%=moment(job.deadline).format("YYYY-MM-DD")%>" 
+					   min="<%=moment().format("YYYY-MM-DD")%>" required>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<p class="mb-1 lead">Job Description:</p>
+			<div class="btn-group btn-group-toggle mb-2" data-toggle="buttons">
+				<label class="btn btn-outline-primary btn-sm <%=activeFull%>">
+					<input type="radio" name="job[workLoad]" value="Full-time" <%=checkFull%> required> Full-time
+		  		</label>
+				<label class="btn btn-outline-primary btn-sm <%=activePart%>">
+					<input type="radio" name="job[workLoad]" value="Part-time" <%=checkPart%> required> Part-time
+				</label>	
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<textarea class="form-control" rows="15" name="job[description]"><%= job.description %></textarea>			
+		</div>
+		
+		<div class="form-group">
+			<button class="btn btn-block btn-lg btn-outline-primary">
+				Save
+			</button> 
+		</div>
+	</form>
+</div>
+
+<% include ../partials/footer %>
