@@ -15,7 +15,7 @@ const express = require('express'),
 // CONFIG DOTENV
 require('dotenv').config();
 
-// SETUP ROUTES
+// REQUIRE ROUTES
 // =============
 const indexRoutes = require('./routes/index'),
 	  jobRoutes = require('./routes/jobs'),

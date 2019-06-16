@@ -1,79 +1,53 @@
 <% include partials/header %>
 
-
 <div class="container">
 	<form action="/register/employer" method="POST">
 		<h2 class="text-center mb-0 font-weight-light"><i class="fas fa-users-cog"></i> Employer Registration</h2>
 		<hr>
 		<div class="form-row">
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				<label>Email</label>
-				<input type="email" class="form-control" name="email" placeholder="Email" required>
+				<input type="email" class="form-control" name="email" placeholder="Email" 
+					   <% if(err) { %> value="<%=defEmail%>" <% } %> required>
 			</div>
-			<div class="form-group col-md-6">
-				<label for="inputPassword4">Password <small class="font-weight-light">(min. 5 characters)</small></label>
+			<div class="form-group col-md-4">
+				<label>Password <small class="font-weight-light">(min. 5 characters)</small></label>
 				<input type="password" class="form-control" name="password" placeholder="Password" required>
+			</div>
+			<div class="form-group col-md-4">
+				<label>Confirm Password</label>
+				<input type="password" class="form-control" name="confirm" placeholder="Confirm password" required>
 			</div>
 		</div>
 		
 		<div class="form-row">
 			<div class="form-group col-md-4">
 				<label>First Name</label>
-				<input type="text" class="form-control" name="firstName" placeholder="First name" required>
+				<input type="text" class="form-control" name="firstName" placeholder="First name" 
+					   <% if(err) { %> value="<%=first%>" <% } %>required>
 			</div>
 			<div class="form-group col-md-4">
 				<label>Middle Name</label>
-				<input type="text" class="form-control" name="middleName" placeholder="Middle name">
+				<input type="text" class="form-control" name="middleName" placeholder="Middle name"
+					   <% if(err) { %> value="<%=middle%>" <% } %>>
 			</div>
 			<div class="form-group col-md-4">
 				<label>Last Name</label>
-				<input type="text" class="form-control" name="lastName" placeholder="Last name" required>
+				<input type="text" class="form-control" name="lastName" placeholder="Last name" 
+					   <% if(err) { %> value="<%=last%>" <% } %>required>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<div class="form-group">
 				<label>Institution Name</label>
-				<input type="text" class="form-control" name="company" placeholder="Institution name" required>
+				<input type="text" class="form-control" name="company" placeholder="Institution name" 
+					   <% if(err) { %> value="<%=defCompany%>" <% } %>required>
 			</div>
 		</div>
 		
 		<button type="submit" class="btn btn-outline-primary">Sign Up</button>
 	</form>
 </div>
-
-
-
-
-
-
-<!-- <div class="row justify-content-center">
-	<div class="col-md-4">
-		<form action="/register/employer" method="POST">
-			<h2 class="text-center mb-4"><i class="fas fa-users-cog"></i> Employer Registration</h2>
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<div class="input-group-text"><i class="fas fa-envelope"></i></div>
-					</div>
-					<input type="email" class="form-control" name="email" placeholder="Email">
-				</div>
-			</div>
-			
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<div class="input-group-text"><i class="fas fa-unlock-alt"></i></div>
-					</div>
-					<input type="password" class="form-control" name="password" placeholder="Password">
-				</div>
-			</div>
-			
-			<div class="form-group">
-				<button class="btn btn-outline-primary btn-block">Sign Up</button>
-			</div>
-		</form>	
-	</div>
-</div> -->
 	
 <% include partials/footer %>

@@ -37,7 +37,7 @@ middlewareObj.isStudent = function(req, res, next) {
 				if (user && user.isEmployer == false) {
 					return next(); 
 				}
-				req.flash("error", "The email you provided doesn't seem to be a student email!");
+				req.flash("Invalid email!");
 				res.redirect("/login/student");
 			}
 		});
@@ -71,7 +71,7 @@ middlewareObj.isEmployer = function(req, res, next) {
 				}
 				console.log("Not authorized!");
 			}
-			req.flash("error", "The email you provided doesn't seem to be an employer email!");
+			req.flash("Invalid email!");
 			res.redirect("/login/employer");
 		});
 	}

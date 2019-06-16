@@ -1,32 +1,51 @@
 <% include partials/header %>
 
+<% var schools = [
+	"The University of British Columbia (UBC)",
+	"Simon Fraser University (SFU)"
+], faculties = [
+	"Arts",
+	"Science"
+], majors = [
+	"Cognitive Systems",
+	"Computer Science"
+] %>	
+	
 <div class="container">
 	<form action="/register/student" method="POST">
 		<h2 class="text-center mb-0 font-weight-light"><i class="fas fa-user-graduate"></i> Student Registration</h2>
 		<hr>
 		<div class="form-row">
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				<label>Email</label>
-				<input type="email" class="form-control" name="email" placeholder="Email" required>
+				<input type="email" class="form-control" name="email" placeholder="Email" 
+					   <% if(err) { %> value="<%=defEmail%>" <% } %> required>
 			</div>
-			<div class="form-group col-md-6">
-				<label for="inputPassword4">Password <small class="font-weight-light">(min. 5 characters)</small></label>
+			<div class="form-group col-md-4">
+				<label>Password <small class="font-weight-light">(min. 5 characters)</small></label>
 				<input type="password" class="form-control" name="password" placeholder="Password" required>
+			</div>
+			<div class="form-group col-md-4">
+				<label>Confirm Password</label>
+				<input type="password" class="form-control" name="confirm" placeholder="Confirm password" required>
 			</div>
 		</div>
 		
 		<div class="form-row">
 			<div class="form-group col-md-4">
 				<label>First Name</label>
-				<input type="text" class="form-control" name="firstName" placeholder="First name" required>
+				<input type="text" class="form-control" name="firstName" placeholder="First name" 
+					   <% if(err) { %> value="<%=first%>" <% } %> required>
 			</div>
 			<div class="form-group col-md-4">
 				<label>Middle Name</label>
-				<input type="text" class="form-control" name="middleName" placeholder="Middle name">
+				<input type="text" class="form-control" name="middleName" placeholder="Middle name"
+					   <% if(err) { %> value="<%=middle%>" <% } %>>
 			</div>
 			<div class="form-group col-md-4">
 				<label>Last Name</label>
-				<input type="text" class="form-control" name="lastName" placeholder="Last name" required>
+				<input type="text" class="form-control" name="lastName" placeholder="Last name" 
+					   <% if(err) { %> value="<%=last%>" <% } %> required>
 			</div>
 		</div>
 		
@@ -34,22 +53,34 @@
 			<div class="form-group col-md-4">
 				<label>School</label>
 				<select class="form-control" name="school" required>
-					<option value="The University of British Columbia (UBC)">The University of British Columbia (UBC)</option>
-					<option value="Simon Fraser University (SFU)">Simon Fraser University (SFU)</option>
+					<% schools.forEach((school) => { %>
+						<option value="<%=school%>" 
+								<% if(err && defSchool && defSchool === school) { %> selected <%}%>>
+							<%= school %>
+						</option>
+					<% }); %>
 				</select>
 			</div>
 			<div class="form-group col-md-4">
 				<label>Faculty</label>
 				<select class="form-control" name="faculty" required>
-					<option value="Arts">Arts</option>
-					<option value="Science">Science</option>
+					<% faculties.forEach((faculty) => { %>
+						<option value="<%=faculty%>" 
+								<% if(err && defFaculty && defFaculty === faculty) { %> selected <%}%>>
+							<%= faculty %>
+						</option>
+					<% }); %>
 				</select>
 			</div>
 			<div class="form-group col-md-4">
 				<label>Major</label>
 				<select class="form-control" name="major" required>
-					<option value="Computer Science">Computer Science</option>
-					<option value="Cognitive Systems">Cognitive Systems</option>
+					<% majors.forEach((major) => { %>
+						<option value="<%=major%>" 
+								<% if(err && defMajor && defMajor === major) { %> selected <%}%>>
+							<%= major %>
+						</option>
+					<% }); %>
 				</select>
 			</div>
 		</div>
@@ -57,8 +88,11 @@
 		<div class="form-group">
 			<label>Expected Graduation</label>
 			<select class="form-control" name="graduation" required>
-				<% for(let i=0; i < 10; i++) { %>
-					<option value="<%=moment().add(i, 'Y').format('YYYY')%>"><%=moment().add(i, 'Y').format('YYYY')%></option>
+				<% for(let i=0; i < 10; i++) { let year = moment().add(i, 'Y').format('YYYY'); %>
+					<option value="<%=year%>"
+							<% if(err && defGraduation && defGraduation === year) { %> selected <% } %>>
+						<%=year%>
+				</option>
 				<% } %>
 			</select>
 		</div>
@@ -66,36 +100,5 @@
 		<button type="submit" class="btn btn-outline-primary">Sign Up</button>
 	</form>
 </div>
-
-
-
-<!-- <div class="row justify-content-center">
-	<div class="col-md-4">
-		<form action="/register/student" method="POST">
-			<h2 class="text-center mb-4"><i class="fas fa-user-graduate"></i> Student Registration</h2>
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<div class="input-group-text"><i class="fas fa-envelope"></i></div>
-					</div>
-					<input type="email" class="form-control" name="email" placeholder="Email">
-				</div>
-			</div>
-			
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<div class="input-group-text"><i class="fas fa-unlock-alt"></i></div>
-					</div>
-					<input type="password" class="form-control" name="password" placeholder="Password">
-				</div>
-			</div>
-			
-			<div class="form-group">
-				<button class="btn btn-outline-primary btn-block">Sign Up</button>
-			</div>
-		</form>	
-	</div>
-</div> -->
 
 <% include partials/footer %>
