@@ -12,8 +12,11 @@ const express = require('express'),
 	  {check, validationResult} = require('express-validator/check'),
 	  _ = require('underscore');
 
+// CONFIG ENV
+require('dotenv').config();
+
 // SETUP ROUTES
-// ===============
+// =============
 const indexRoutes = require('./routes/index'),
 	  jobRoutes = require('./routes/jobs'),
 	  userRoutes = require('./routes/users');
@@ -60,6 +63,6 @@ app.use(jobRoutes);
 app.use(userRoutes);
 
 // LISTEN 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
 	console.log("ResearchConnected!");
 });

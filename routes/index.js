@@ -109,7 +109,9 @@ router.get("/login/student", (req, res) => {
 // LOGIN -- Handle STUDENT login
 router.post("/login/student", middleware.isStudent, passport.authenticate("local", {
 	successRedirect: "/jobs", 
-	failureRedirect: "/login/student"
+	failureRedirect: "/login/student",
+	failureFlash: true,
+    successFlash: 'Logged in!'
 }), (req, res) => {
 });
 
