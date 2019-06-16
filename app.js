@@ -12,7 +12,7 @@ const express = require('express'),
 	  {check, validationResult} = require('express-validator/check'),
 	  _ = require('underscore');
 
-// CONFIG ENV
+// CONFIG DOTENV
 require('dotenv').config();
 
 // SETUP ROUTES
@@ -34,7 +34,7 @@ app.locals._ = _;
 // Job.remove({}, (err, job) => {
 // });
 
-mongoose.connect("mongodb://localhost:27017/research_connect", {useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true});
+mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true});
 
 // PASSPORT CONFIG
 // ==================
