@@ -14,7 +14,7 @@ if (job.workLoad == "Full-time") {
 } %>
 
 <div class="container border rounded py-4 px-5">
-	<form action="/jobs/<%=job._id%>?_method=PUT" method="POST">
+	<form onsubmit="return confirm('Confirm changes');" action="/jobs/<%=job._id%>?_method=PUT" method="POST">
 		<p class="display-4 text-center">
 			Edit Posting
 		</p>

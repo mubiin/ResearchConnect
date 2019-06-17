@@ -27,7 +27,8 @@
 			if (applicant.status == "Waitlisted")
 				txtColor = "text-primary"; 
 			%>
-			<form action="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/update-status" method="POST" class="form-horizontal">
+			<form onsubmit="return confirm('Confirm application status update');"
+				  action="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/update-status" method="POST" class="form-horizontal">
 				<tr>
 					<th scope="row"><%= i %></th>
 					<td>
@@ -59,7 +60,7 @@
 						</button>
 						<small class="float-left">Status: <span class="<%= txtColor %>"><%= applicant.status %></span></small>
 					</td>
-				</tr>				
+				</tr>
 			</form>
 			
 		<% i+=1; }); %>

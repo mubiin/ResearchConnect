@@ -1,0 +1,52 @@
+<% include ../partials/header %>
+
+<div class="container mb-4">
+	<div class="row justify-content-center">
+		<div class="col-md-10">
+			<form onsubmit="return confirm('Confirm changes');"
+				  action="/profile/edit" enctype="multipart/form-data" method="POST">
+				<h2 class="text-center mb-4"><i class="fas fa-user-graduate"></i> Edit Profile </h2>
+				<hr>
+				<div class="form-row">
+					<div class="form-group col-md-12">
+						<label>Email</label>
+						<input type="email" class="form-control" name="user[email]" placeholder="Email" value="<%=user.email%>" required>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label>First Name</label>
+						<input type="text" class="form-control" name="user[firstName]" placeholder="First name" 
+							   value="<%=user.firstName%>" required>
+					</div>
+					<div class="form-group col-md-4">
+						<label>Middle Name</label>
+						<input type="text" class="form-control" name="user[middleName]" placeholder="Middle name" value="<%=user.middleName%>">
+					</div>
+					<div class="form-group col-md-4">
+						<label>Last Name</label>
+						<input type="text" class="form-control" name="user[lastName]" placeholder="Last name" 
+							   value="<%=user.lastName%>" required>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="form-group col-md-12">
+						<label>Institution Name</label>
+						<input type="text" class="form-control" name="user[company]" placeholder="Institution name"
+							   value="<%= user.company %>" required>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col-md-3">
+						<button type="submit" class="btn btn-outline-primary btn-block">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<% include ../partials/footer %>

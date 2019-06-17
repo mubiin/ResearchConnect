@@ -65,7 +65,8 @@
 					<hr>
 					<p><%- job.description %></p>
 					<% if (isAuthorized) { %>
-						<form action="/jobs/<%=job._id%>?_method=DELETE" method="POST" id="delete" class="float-right">
+						<form onsubmit="return confirm('Are you sure you want to delete this post?');"
+							  action="/jobs/<%=job._id%>?_method=DELETE" method="POST" id="delete" class="float-right">
 							<button class="btn btn-outline-danger">Delete</button>
 						</form>							
 					<% } %>

@@ -10,7 +10,6 @@ const express = require('express'),
 	  mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_APIKEY, domain: process.env.MAILGUN_DOMAIN}),
 	  crypto = require('crypto'),
 	  async = require('async');
-	  
 
 // LANDING
 router.get("/", (req, res) => {

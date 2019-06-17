@@ -2,7 +2,8 @@
 
 <div class="row justify-content-center py-4">
 	<div class="col-10 col-md-8 col-xl-5">
-		<form action="/jobs/<%=job._id%>/apply" enctype="multipart/form-data" method="POST">
+		<form onsubmit="return confirm('Are you sure?');" 
+			  action="/jobs/<%=job._id%>/apply" enctype="multipart/form-data" method="POST">
 			<h1 class="font-weight-light text-center mb-3">Application Form</h1>
 			<hr class="my-1">
 			<p class="lead my-0 text-center" id="companyName"><%= job.company %></p>

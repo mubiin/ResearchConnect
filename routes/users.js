@@ -38,11 +38,14 @@ router.get("/profile", middleware.isLoggedIn, (req, res) => {
 
 // EDIT PROFILE
 router.get("/profile/edit", middleware.isLoggedIn, (req, res) => {
-	res.render("users/edit-profile", {user: req.user});
+	if (req.user.isEmployer)
+		res.render("users/edit-profile-employer", {user: req.user});
+	else 
+		res.render("users/edit-profile-student", {user: req.user});
 });
 
 // HANDLE EDIT PROFILE
-router.post("/profile/edit", middleware.isLoggedIn, middleware.isStudent, upload.single('resume'), (req, res) => {
+router.post("/profile/edit", middleware.isLoggedIn, upload.single('resume'), (req, res) => {
 	if (req.file) {
 		var resume = {
 			contentType: req.file.mimetype, 
