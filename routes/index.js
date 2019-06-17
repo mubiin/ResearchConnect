@@ -99,7 +99,7 @@ router.post("/register/student", [
 				var mailData = {
 				  from: 'ResearchConnect <donotreply@researchconnect.com>',
 				  to: req.body.email,
-				  subject: 'ResearchConnect: Verify Your Email',
+				  subject: 'Verify your email',
 				  text:
 					'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
 					'https://' + req.headers.host + '/verify/' + token + '\n'
@@ -185,7 +185,7 @@ router.post("/register/employer", [
 				var mailData = {
 				  from: 'ResearchConnect <donotreply@researchconnect.com>',
 				  to: req.body.email,
-				  subject: 'ResearchConnect: Verify Your Email',
+				  subject: 'Verify your email',
 				  text: 
 					'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
 					'https://' + req.headers.host + '/verify/' + token + '\n'
@@ -228,7 +228,7 @@ router.post('/verify/resend', middleware.isLoggedIn, (req, res) => {
         var mailData = {
             from: 'ResearchConnect <donotreply@researchconnect.com>',
             to: req.user.email,
-            subject: 'ResearchConnect: Verify Your Email',
+            subject: 'Verify Your Email',
             text:
                 'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
                 'https://' + req.headers.host + '/verify/' + token + '\n'
@@ -283,7 +283,7 @@ router.get("/verify/:token", (req, res) => {
 			var mailData = {
 			  from: 'ResearchConnect <donotreply@researchconnect.com>',
 			  to: user.email,
-			  subject: 'ResearchConnect: Your email has been verified!',
+			  subject: 'Your email has been verified!',
 			  text: 'Hello, ' + user.firstName + '! \n\n' + 
 				'This is a confirmation that your email has been verified! .\n'
 			};
@@ -396,7 +396,7 @@ router.post("/forgot", (req, res) => {
 			var mailData = {
 			  from: 'ResearchConnect <donotreply@researchconnect.com>',
 			  to: user.email,
-			  subject: 'ResearchConnect: Reset Your Password',
+			  subject: 'Reset your password',
 			  text: 'You are receiving this because you (or someone else) have requested the reset of the password for your ResearchConnect account.\n\n' + 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
 				'https://' + req.headers.host + '/reset/' + token + '\n\n' + 
 				'If you did not request this, please ignore this email and your password will remain unchanged.\n'
@@ -482,7 +482,7 @@ router.post("/reset/:token", (req, res) => {
 			var mailData = {
 			  from: 'ResearchConnect <donotreply@researchconnect.com>',
 			  to: user.email,
-			  subject: 'ResearchConnect: Your password has been changed!',
+			  subject: 'Your password has been changed!',
 			  text: 'Hello, ' + user.firstName + '! \n\n' + 
 				'This is a confirmation that the password for your ResearchConnect account with the email: ' + user.email + 
 				' has just been changed.\n'
