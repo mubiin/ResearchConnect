@@ -7,7 +7,7 @@ const express = require('express'),
 	  expressSanitizer = require('express-sanitizer'),
 	  {check, validationResult} = require('express-validator/check'),
 	  middleware = require('../middleware'),
-	  nodemailer = require('nodemailer'),
+	  mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_APIKEY, domain: process.env.MAILGUN_DOMAIN}),
 	  crypto = require('crypto'),
 	  async = require('async');
 	  
@@ -234,34 +234,27 @@ router.post("/forgot", (req, res) => {
 			});
 		},
 		function(token, user, done) {
-			var smtpTransport = nodemailer.createTransport({
-				service: 'Gmail', 
-				auth: {
-					user: process.env.GMAIL_EMAIL,
-					pass: process.env.GMAIL_PASS
-				}
-			});
-			var mailOptions = {
-				to: user.email,
-				from: process.env.GMAIL_EMAIL,
-				subject: 'ResearchConnect: Reset Your Password',
-				text: 'You are receiving this because you (or someone else) have requested the reset of the password for your ResearchConnect account.\n\n' + 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-				'http://' + req.headers.host + '/reset/' + token + '\n\n' + 
+			var mailData = {
+			  from: 'ResearchConnect <donotreply@researchconnect.com>',
+			  to: user.email,
+			  subject: 'ResearchConnect: Reset Your Password',
+			  text: 'You are receiving this because you (or someone else) have requested the reset of the password for your ResearchConnect account.\n\n' + 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+				'https://' + req.headers.host + '/reset/' + token + '\n\n' + 
 				'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-      		};
-			smtpTransport.sendMail(mailOptions, function(err) {
-				if (err) {
-					console.log(err);
-					req.flash("Error sending email.");
-					return res.redirect("/forgot");
+			};
+
+			mailgun.messages().send(mailData, function (error, body) {
+				if (error) 
+					console.log(error);
+				else {
+					req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+					done(error);
 				}
-				req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-				done(err);
 			});
 		}
-	], function(err) {
-		if (err) {
-			console.log(err);
+	], function(error) {
+		if (error) {
+			console.log(error);
 			req.flash("Unexpected error...");
 			return res.redirect("/forgot");
 		}
@@ -327,29 +320,27 @@ router.post("/reset/:token", (req, res) => {
 			});
 		}, 
 		function(user, done) {
-			var smtpTransport = nodemailer.createTransport({
-				service: 'Gmail', 
-				auth: {
-					user: process.env.GMAIL_EMAIL,
-					pass: process.env.GMAIL_PASS
-				}
-			});
-			var mailOptions = {
-				to: user.email,
-				from: process.env.GMAIL_EMAIL,
-				subject: 'ResearchConnect: Your password has been changed!',
-				text: 'Hello, ' + user.firstName + '! \n\n' + 
+			var mailData = {
+			  from: 'ResearchConnect <donotreply@researchconnect.com>',
+			  to: user.email,
+			  subject: 'ResearchConnect: Your password has been changed!',
+			  text: 'Hello, ' + user.firstName + '! \n\n' + 
 				'This is a confirmation that the password for your ResearchConnect account with the email: ' + user.email + 
 				' has just been changed.\n'
-      		};
-			smtpTransport.sendMail(mailOptions, function(err) {
-				req.flash('success', 'Your password has been successfully updated!');
-				done(err);
+			};
+
+			mailgun.messages().send(mailData, function (error, body) {
+				if (error) 
+					console.log(error);
+				else {
+					req.flash('success', 'Password successfully updated!');
+					done(error);
+				}
 			});
 		}
-	], function (err) {
-		if (err) {
-			console.log(err);
+	], function (error) {
+		if (error) {
+			console.log(error);
 			req.flash('error', "Unexpected error encountered.");
 			return res.redirect('back');
 		}

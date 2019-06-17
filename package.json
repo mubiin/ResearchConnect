@@ -20,6 +20,7 @@
     "express-sanitizer": "^1.0.5",
     "express-session": "^1.16.1",
     "express-validator": "^5.3.1",
+    "mailgun-js": "^0.22.0",
     "method-override": "^3.0.0",
     "moment": "^2.24.0",
     "mongoose": "^5.5.11",
