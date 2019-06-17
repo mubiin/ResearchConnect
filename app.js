@@ -64,6 +64,8 @@ app.use(indexRoutes);
 app.use(jobRoutes);
 app.use(userRoutes);
 
+User.findByIdAndRemove('5d073e29f77c8d6503154b3a', (err)=>{});
+
 // LISTEN 
 app.listen(process.env.PORT, () => {
 	console.log("ResearchConnected!");

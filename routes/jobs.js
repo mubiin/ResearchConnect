@@ -205,7 +205,7 @@ router.get("/jobs/:id/unsave", middleware.isLoggedIn, middleware.isStudent, (req
 });
 
 // APPLICATION FORM
-router.get("/jobs/:id/apply", middleware.isLoggedIn, middleware.isStudent, (req, res) => {
+router.get("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, middleware.isStudent, (req, res) => {
 	Job.findById(req.params.id, (err, job) => {
 		if (err) {
 			console.log(err);
@@ -220,7 +220,7 @@ router.get("/jobs/:id/apply", middleware.isLoggedIn, middleware.isStudent, (req,
 // HANDLE APPLICATION
 var uploadFields = upload.fields([{ name: 'resume', maxCount: 1 }, { name: 'coverLetter', maxCount: 1 }]);
 
-router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isStudent, uploadFields, (req, res) => {
+router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, middleware.isStudent, uploadFields, (req, res) => {
 	Job.findById(req.params.id, (err, job) => {
 		if (err) {
 			console.log(err);

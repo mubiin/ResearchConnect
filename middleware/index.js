@@ -37,7 +37,7 @@ middlewareObj.isStudent = function(req, res, next) {
 				if (user && user.isEmployer == false) {
 					return next(); 
 				}
-				req.flash("Invalid email!");
+				req.flash('error', "Email not found.");
 				res.redirect("/login/student");
 			}
 		});
@@ -49,7 +49,7 @@ middlewareObj.isEmployer = function(req, res, next) {
 	if (req.user) {
 		User.findOne({_id: req.user._id}, (err, user) => {
 			if (err) {
-				console.log(err);
+				req.flash('error', err.message);
 				res.reidrect("back");
 			} else {
 				if (user && user.isEmployer === true) {
@@ -62,17 +62,16 @@ middlewareObj.isEmployer = function(req, res, next) {
 	} else {
 		User.findOne({email: req.body.email}, (err, user) => {
 			if (err) {
-				console.log(err);
+				req.flash('error', err.message);
 				res.redirect("/login/employer");
 			}
 			else {
 				if (user && user.isEmployer === true) {
 					return next(); 
 				}
-				console.log("Not authorized!");
+				req.flash('error', "Email not found.");
+				res.redirect("/login/employer");
 			}
-			req.flash("Invalid email!");
-			res.redirect("/login/employer");
 		});
 	}
 };
@@ -103,6 +102,13 @@ middlewareObj.checkDocAuthorization = function(req, res, next) {
 		req.flash("error", "You are not authorized to view that!");
 		res.redirect("/jobs/" + req.params.id);
 	}
+};
+
+middlewareObj.isVerified = function(req, res, next) {
+	if (req.user.isVerified)
+		return next();
+	req.flash('error', "Please verify your email first!");
+	res.redirect("back");
 };
 
 module.exports = middlewareObj;

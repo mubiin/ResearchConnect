@@ -16,8 +16,9 @@ $('.change-status').on('change', function() {
 // Add margin-bottom to containers
 $('.container').addClass("mb-4");
 
-// Remove margin-bottom from navbar container
+// Remove margin-bottom for select containers
 $('#navbar-container').removeClass("mb-4");
+$('#verifyNotice').removeClass("mb-4");
 
 // Handle resume upload visual
 $('#resumeCheck').on('change', function() {

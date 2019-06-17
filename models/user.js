@@ -33,7 +33,9 @@ var userSchema = mongoose.Schema({
 	isEmployer: Boolean,
 	company: String,
 	resetPasswordToken: String,
-	resetPasswordExpires: Date
+	resetPasswordExpires: Date,
+	verificationToken: String,
+	isVerified: {type: Boolean, default: false, required: true}
 });
 
 userSchema.plugin(passportLocalMongoose, {usernameField: "email"});
