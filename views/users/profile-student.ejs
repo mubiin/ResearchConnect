@@ -88,7 +88,7 @@
 							</small>
 						</div>
 						<p class="lead mb-0"><%= job.company %></p>
-						<form class="form-inline d-flex justify-content-between">
+						<form action="/jobs/<%= job._id %>/unsave" method="GET" class="form-inline d-flex justify-content-between">
 							<span><%= job.location %></span>
 							<button class="btn btn-outline-info btn">Unsave</button>
 						</form>	
