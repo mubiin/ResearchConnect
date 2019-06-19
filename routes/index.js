@@ -212,7 +212,6 @@ router.get("/auth/google/employer", passport.authenticate('google-employer', {sc
 
 // GOOGLE AUTH CALLBACK
 router.get("/auth/google/callback", passport.authenticate('google-student'), (req, res) => {
-	console.log(req.user);
 	if (req.user.isNewUser) {
 		req.flash("success", "Logged in! Please complete your profile.");
 		res.redirect("/profile/edit");

@@ -52,9 +52,6 @@ router.post("/profile/edit", middleware.isLoggedIn, upload.single('resume'), (re
 			data: req.file.buffer
 		};
 		req.user.resume = resume;
-		if (req.user.isNewUser) {
-			req.user.isNewUser = false;
-		}
 		req.user.save();
 	}
 	User.findByIdAndUpdate(req.user._id, req.body.user, (err, user) => {
@@ -63,6 +60,8 @@ router.post("/profile/edit", middleware.isLoggedIn, upload.single('resume'), (re
 			req.flash('error', "Error updating profile!");
 			res.redirect('back');
 		} else {
+			if (user.isNewUser) user.isNewUser = false;
+			user.save();
 			req.flash('success', "Updated profile!");
 			res.redirect("/profile");
 		}
