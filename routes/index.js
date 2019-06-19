@@ -210,8 +210,8 @@ router.get("/auth/google/student", passport.authenticate('google-student', {scop
 // GOOGLE AUTH (EMPLOYER)
 router.get("/auth/google/employer", passport.authenticate('google-employer', {scope: ['email', 'profile']}));
 
-// GOOGLE AUTH CALLBACK
-router.get("/auth/google/callback", passport.authenticate('google-student'), (req, res) => {
+// GOOGLE AUTH CALLBACK (STUDENT)
+router.get("/auth/google/student/callback", passport.authenticate('google-student'), (req, res) => {
 	if (req.user.isNewUser) {
 		req.flash("success", "Logged in! Please complete your profile.");
 		res.redirect("/profile/edit");
@@ -221,6 +221,17 @@ router.get("/auth/google/callback", passport.authenticate('google-student'), (re
 	}
 });
 
+
+// GOOGLE AUTH CALLBACK (EMPLOYER)
+router.get("/auth/google/employer/callback", passport.authenticate('google-employer'), (req, res) => {
+	if (req.user.isNewUser) {
+		req.flash("success", "Logged in! Please complete your profile.");
+		res.redirect("/profile/edit");
+	} else {
+		req.flash("success", "Logged in!");
+		res.redirect("/profile");
+	}
+});
 
 // SHOW VERIFY PAGE
 router.get("/verify", middleware.isLoggedIn, (req, res) => {

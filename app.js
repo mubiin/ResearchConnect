@@ -59,7 +59,7 @@ passport.use(User.createStrategy());
 passport.use('google-student', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/auth/google/callback'
+    callbackURL: '/auth/google/student/callback'
 }, function(accessToken, refreshToken, profile, done) {
     User.findOne({ email: profile.emails[0].value }, (err, user) => {
         if (err) console.log(err);
@@ -98,7 +98,7 @@ passport.use('google-student', new GoogleStrategy({
 passport.use('google-employer', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/auth/google/callback'
+    callbackURL: '/auth/google/employer/callback'
 }, function(accessToken, refreshToken, profile, done) {
     User.findOne({ email: profile.emails[0].value }, (err, user) => {
         if (err) console.log(err);
