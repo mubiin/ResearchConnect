@@ -19,3 +19,17 @@
 #companyName {
 	font-size: 1.8rem;
 }
+
+body {
+  padding-top: 90px;
+}
+
+@media (max-width: 768px) { 
+	#title {
+		font-size: 2rem;
+	}
+	body {
+	  padding-top: 70px;
+	}
+}
+

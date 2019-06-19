@@ -204,6 +204,25 @@ router.post("/register/employer", [
 	});
 });
 
+// GOOGLE AUTH (STUDENT)
+router.get("/auth/google/student", passport.authenticate('google-student', {scope: ['email', 'profile']}));
+
+// GOOGLE AUTH (EMPLOYER)
+router.get("/auth/google/employer", passport.authenticate('google-employer', {scope: ['email', 'profile']}));
+
+// GOOGLE AUTH CALLBACK
+router.get("/auth/google/callback", passport.authenticate('google-student'), (req, res) => {
+	console.log(req.user);
+	if (req.user.isNewUser) {
+		req.flash("success", "Logged in! Please complete your profile.");
+		res.redirect("/profile/edit");
+	} else {
+		req.flash("success", "Logged in!");
+		res.redirect("/profile");
+	}
+});
+
+
 // SHOW VERIFY PAGE
 router.get("/verify", middleware.isLoggedIn, (req, res) => {
 	if (req.user.isVerified === true) {

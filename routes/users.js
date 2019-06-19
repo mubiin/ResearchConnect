@@ -52,6 +52,9 @@ router.post("/profile/edit", middleware.isLoggedIn, upload.single('resume'), (re
 			data: req.file.buffer
 		};
 		req.user.resume = resume;
+		if (typeof req.user.isNewUser !== undefined) {
+			req.user.isNewUser = false;
+		}
 		req.user.save();
 	}
 	User.findByIdAndUpdate(req.user._id, req.body.user, (err, user) => {

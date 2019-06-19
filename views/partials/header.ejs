@@ -30,25 +30,9 @@ if (currentPath == "/") {
 	
 	<script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=ihunqbym9mdtnh064h6nft1g4d63ze2mm4y3ljjv0hrfavtd"></script>
 </head>
-<body>
-	<% if (currentUser && !currentUser.isVerified && currentPath !== "/verify") { %>
-			<!-- <div class="container-fluid"> -->
-				<div class="alert alert-danger mb-0" role="alert">
-					<div class="container" id="verifyNotice">
-						Please verify your email: <%= currentUser.email %> | 
-						<form action="/verify/resend" method="POST" class="d-inline">
-							<button class="btn btn-sm btn-outline-primary">
-								Resend email
-							</button>
-						</form>
-					</div>
-					
-				</div>
-			<!-- </div> -->
-		<% } %>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 mb-lg-5 sticky-top">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 mb-lg-5 fixed-top">
 		<div class="container" id="navbar-container">
-			<a class="navbar-brand" href="#">ResearchConnect</a>
+			<a class="navbar-brand" href="/">ResearchConnect</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" 
 			aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -106,6 +90,19 @@ if (currentPath == "/") {
 				</div>
 			</div>
 		</nav>
+	
+	<% if (currentUser && !currentUser.isVerified && currentPath !== "/verify") { %>
+		<div class="container">
+			<div class="alert alert-warning mb-0" role="alert">
+				Please verify your email: <%= currentUser.email %> | 
+				<form action="/verify/resend" method="POST" class="d-inline">
+					<button class="btn btn-sm btn-outline-primary">
+						Resend email
+					</button>
+				</form>
+			</div>
+		</div>
+	<% } %>
 		
 		<% if (error != "") { %>
 			<div class="container">
@@ -122,3 +119,5 @@ if (currentPath == "/") {
 				</div>
 			</div>
 		<% } %>
+<body>
+	

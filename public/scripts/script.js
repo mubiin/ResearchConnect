@@ -41,3 +41,20 @@ $('#coverLetterCheck').on('change', function() {
 		$('#inputGroupFile02').removeAttr('disabled');
 	}
 });
+
+
+$(function () {
+  var lastScrollTop = 0;
+  var $navbar = $('.navbar');
+
+  $(window).scroll(function(event){
+    var st = $(this).scrollTop();
+
+    if (st > lastScrollTop) { // scroll down
+      $navbar.hide();
+    } else { // scroll up
+      $navbar.show();
+    }
+    lastScrollTop = st;
+  });
+});

@@ -5,7 +5,8 @@
 		<form action="/login/employer" method="POST">
 			<h2 class="text-center font-weight-light mb-0"><i class="fas fa-users-cog"></i> Employer Login</h2>
 			<hr class="mb-4">
-			<div class="form-group">
+			
+			<div class="form-group mt-2">
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<div class="input-group-text"><i class="fas fa-envelope"></i></div>
@@ -14,7 +15,7 @@
 				</div>
 			</div>
 			
-			<div class="form-group mb-1">
+			<div class="form-group">
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<div class="input-group-text"><i class="fas fa-key"></i></div>
@@ -22,13 +23,13 @@
 					<input type="password" class="form-control" name="password" placeholder="Password">
 				</div>
 			</div>
-			
-			<a href="/forgot">Forgot Password?</a>
-			
-			<div class="form-group mt-3">
+			<div class="form-group">
 				<button class="btn btn-outline-success btn-block">Login</button>
 			</div>
 		</form>	
+		<hr>
+		<span class="lead">Login with: </span><a href="/auth/google/employer"><i class="fab fa-google p-2 px-3 border rounded"></i></a>
+		<a href="/forgot" class="float-right">Forgot Password?</a>
 	</div>
 </div>
 	

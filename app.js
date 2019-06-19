@@ -6,6 +6,7 @@ const express = require('express'),
 	  passport = require('passport'),
 	  cookieParser = require("cookie-parser"),
 	  LocalStrategy = require('passport-local'),
+	  GoogleStrategy = require('passport-google-oauth20').Strategy,
 	  User = require('./models/user'),
 	  Job = require('./models/job'),
 	  expressSanitizer = require('express-sanitizer'),
@@ -46,9 +47,90 @@ app.use(require("express-session")({
 	saveUninitialized: false
 }));
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
+
+// CREATE GOOGLE AUTH STRATEGIES
+// ===============================
+
+// SETUP GOOGLE AUTH (STUDENT)
+passport.use('google-student', new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+	console.log(profile);
+    User.findOne({ googleId: profile.id }, function (err, user) {
+		if(err) {
+			console.log(err);
+			req.flash("error", "Unexpected error encountered.");
+			return res.redirect('back');
+		}
+		if (!user) {
+			var newUser = new User({
+				email: profile.emails[0].value, 
+				googleId: profile.id,
+				firstName: profile.name.givenName,
+				middleName: "",
+				lastName: profile.name.familyName,
+				isEmployer: false,
+				isVerified: true,
+				isNewUser: true
+			});
+			newUser.save((err) => {
+				if (err) {
+					console.log(err);
+				}
+				return done(err, newUser);
+			});
+		} else {
+			return done(err, user);
+		}
+    });
+  }
+));
+
+// SETUP GOOGLE AUTH (EMPLOYER)
+passport.use('google-employer', new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+	console.log(profile);
+    User.findOne({ googleId: profile.id }, function (err, user) {
+		if(err) {
+			console.log(err);
+			req.flash("error", "Unexpected error encountered.");
+			return res.redirect('back');
+		}
+		if (!user) {
+			var newUser = new User({
+				email: profile.emails[0].value, 
+				googleId: profile.id,
+				firstName: profile.name.givenName,
+				middleName: "",
+				lastName: profile.name.familyName,
+				isEmployer: true,
+				isVerified: true,
+				isNewUser: true
+			});
+			newUser.save((err) => {
+				if (err) {
+					console.log(err);
+				}
+				return done(err, newUser);
+			});
+		} else {
+			return done(err, user);
+		}
+    });
+  }
+));
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -63,8 +145,6 @@ app.use((req, res, next) => {
 app.use(indexRoutes);
 app.use(jobRoutes);
 app.use(userRoutes);
-
-User.findByIdAndRemove('5d073e29f77c8d6503154b3a', (err)=>{});
 
 // LISTEN 
 app.listen(process.env.PORT, () => {
