@@ -12,24 +12,29 @@ if (search) {
 	</h2>
 	<hr>
 	<div class="row">
-		<% jobs.forEach((job) => { %>
-		<div class="col-md-4 col-lg-3 mb-4">
-			<div class="card h-100">
-				<div class="card-header h-100">
-					<h5 class="mb-0"><%= job.company %></h5>
-					<p><%= job.location %></p>
-				</div>
+		<% if (jobs.length < 1) { %>
+			<div class="col-12">
+				<p class="lead">No jobs found!</p>
+			</div>
+		<% } else { %>
+			<% jobs.forEach((job) => { %>
+			<div class="col-md-4 col-lg-3 mb-4">
+				<div class="card h-100">
+					<div class="card-header h-100">
+						<h5 class="mb-0"><%= job.company %></h5>
+						<p><%= job.location %></p>
+					</div>
 
-				<div class="card-body h-100">
-					<h5 class="card-title mb-0"><%= job.role %></h5>
-					<p class="lead"><%= job.workLoad %></p>
-					<p class="font-weight-light"><%= moment(job.createdAt).fromNow() %></p>
-					<hr>
-					<a href="/jobs/<%= job._id %>" class="btn btn-primary">More Info</a>
-				</div>
-			</div>	
-		</div>
-		<% }); %>
+					<div class="card-body h-100">
+						<h5 class="card-title mb-0"><%= job.role %></h5>
+						<p class="lead"><%= job.workLoad %></p>
+						<p class="font-weight-light"><%= moment(job.createdAt).fromNow() %></p>
+						<hr>
+						<a href="/jobs/<%= job._id %>" class="btn btn-primary">More Info</a>
+					</div>
+				</div>	
+			</div>
+			<% })}; %>
 	</div>
 	<hr>
 	<nav>

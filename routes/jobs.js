@@ -31,9 +31,6 @@ router.get("/jobs", (req, res) => {
 				if (err) {
 					console.log(err);
 				} else {
-					if (jobs.length < 1)
-						return res.send("No jobs found...");
-
 					return res.render("jobs/index", {
 						jobs: jobs,
 						search: req.query.search,
