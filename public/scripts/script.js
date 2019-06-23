@@ -42,7 +42,7 @@ $('#coverLetterCheck').on('change', function() {
 	}
 });
 
-
+// Make navbar responsive to scrolling up/down
 $(function () {
   var lastScrollTop = 0;
   var $navbar = $('.navbar');
@@ -58,3 +58,11 @@ $(function () {
     lastScrollTop = st;
   });
 });
+
+$('#addIcon').hover(function() {
+	$('#addJob').fadeIn("medium", function(){});
+}, function() {
+	$('#addJob').fadeOut("fast", function(){});
+});
+
+

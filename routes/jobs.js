@@ -64,12 +64,12 @@ router.get("/jobs", (req, res) => {
 });
 
 // NEW job form
-router.get("/jobs/new", middleware.isLoggedIn, middleware.isEmployer, (req, res) => {
+router.get("/jobs/new", middleware.isLoggedIn, middleware.isEmployer, middleware.isVerified, (req, res) => {
 	res.render("jobs/new");
 });
 
 // CREATE job
-router.post("/jobs", middleware.isLoggedIn, middleware.isEmployer, (req, res) => {
+router.post("/jobs", middleware.isLoggedIn, middleware.isEmployer, middleware.isVerified, (req, res) => {
 	req.body.job.description = req.sanitize(req.body.job.description);
 	var newJob = req.body.job;
 	newJob.owner = req.user;

@@ -33,3 +33,7 @@ body {
 	}
 }
 
+#addJob {
+	display: none;
+}
+

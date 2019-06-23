@@ -9,6 +9,10 @@ if (search) {
 <div class="container">
 	<h2>
 		Browse jobs: 
+		<% if (currentUser && currentUser.isEmployer) { %>
+			<a href="/jobs/new" id="addIcon" class="ml-auto"><i class="fas fa-plus-square"></i></a>
+			<span class="lead m-0 p-0" id="addJob">Add new posting</span>
+		<% } %>
 	</h2>
 	<hr>
 	<div class="row">
