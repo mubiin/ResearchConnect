@@ -9,7 +9,10 @@ const express = require('express'),
 	  path = require('path'),
 	  _ = require('underscore'),
 	  escapeRegex = require('escape-string-regexp'),
-	  middleware = require('../middleware');
+	  middleware = require('../middleware'),
+	  Notification = require('../models/notification'),
+	  async = require('async');
+	  
 
 // SET STORAGE
 var storage = multer.memoryStorage();
@@ -225,20 +228,29 @@ router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, mid
 			res.redirect("/jobs/" + req.params.id);
 		} else {
 			if (!req.user.jobsApplied.some(job => job._id == req.params.id)) {
-				var resume;
+				let resume;
 				if (req.body.defaultResume) {
 					resume = req.user.resume;
 				} else {
-					resume = {
-						contentType: req.files['resume'][0].mimetype,
-						data: req.files['resume'][0].buffer
-					};
+					if (req.files['resume']) {
+						resume = {
+							contentType: req.files['resume'][0].mimetype,
+							data: req.files['resume'][0].buffer
+						};
+					} else {
+						resume = null;
+					}
 				}	
 				
-				var coverLetter = {
-					contentType: req.files['coverLetter'][0].mimetype,
-					data: req.files['coverLetter'][0].buffer
-				};
+				let coverLetter;
+				if (req.files['coverLetter']) {
+					coverLetter = {
+						contentType: req.files['coverLetter'][0].mimetype,
+						data: req.files['coverLetter'][0].buffer
+					};
+				} else {
+					coverLetter = null;
+				}
 
 				var name;
 				if (req.user.middleName == "")
@@ -310,20 +322,43 @@ router.get("/jobs/:id/applicants/:applicantId/cover-letter", middleware.isLogged
 
 // UPDATE APPLICATION STATUS
 router.post("/jobs/:id/applicants/:applicantId/update-status", middleware.isLoggedIn, middleware.isEmployer, middleware.checkJobOwnership, 
-			(req, res) => {
-	Job.findById(req.params.id, (err, job) => {
-		if (err) {
-			console.log(err);
-			req.flash('error', "Error updating application stataus!");
-			res.redirect("back");
-		} else {
-			var applicant = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); });
-			applicant.status = req.body.status;
-			job.save();
-			req.flash('success', "Status for " + applicant.fullName + " updated!");
-			res.redirect('back');	
-		}
-	});
+			async (req, res) => {
+	try {
+		let job = await Job.findById(req.params.id);
+		var applicant = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); });
+		applicant.status = req.body.status;
+		job.save();
+		
+		let newNotification = {
+			text: "Your application status for " + job.role + " at " + job.company + " has been updated!",
+			url: "/jobs/" + req.params.id 
+		};
+		
+		let user = await User.findById(req.params.applicantId);
+		let notification = await Notification.create(newNotification);
+		user.notifications.push(notification);
+		user.save();
+		
+		req.flash('success', "Status for " + applicant.fullName + " updated!");
+		res.redirect('back');
+	} catch(err) {
+		req.flash('error', err.message);
+      	res.redirect('back');
+	}
+	
+	// Job.findById(req.params.id, (err, job) => {
+	// 	if (err) {
+	// 		console.log(err);
+	// 		req.flash('error', "Error updating application stataus!");
+	// 		res.redirect("back");
+	// 	} else {
+	// 		var applicant = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); });
+	// 		applicant.status = req.body.status;
+	// 		job.save();
+	// 		req.flash('success', "Status for " + applicant.fullName + " updated!");
+	// 		res.redirect('back');	
+	// 	}
+	// });
 });
 
 module.exports = router;

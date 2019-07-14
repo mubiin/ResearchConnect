@@ -1,6 +1,4 @@
-const mongoose = require('mongoose'),
-	  passportLocalMongoose = require('passport-local-mongoose'),
-	  User = require('./user');
+const mongoose = require('mongoose');
 
 var jobSchema = mongoose.Schema({
 	company: {type: String, required: true},

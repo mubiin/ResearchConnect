@@ -9,6 +9,7 @@ const express = require('express'),
 	  middleware = require('../middleware'),
 	  mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_APIKEY, domain: process.env.MAILGUN_DOMAIN}),
 	  crypto = require('crypto'),
+	  Notification = require('../models/notification'),
 	  async = require('async');
 
 // LANDING
@@ -533,6 +534,18 @@ router.post("/reset/:token", (req, res) => {
 		}
 		res.redirect("/profile");
 	});
+});
+
+router.get("/notifications/:id", middleware.isLoggedIn, async (req, res) => {
+	try {
+		let notification = await Notification.findById(req.params.id);
+		notification.isRead = true;
+		notification.save();
+		res.redirect(notification.url);
+	} catch(err) {
+		req.flash('error', err.message);
+		req.redirect('back');
+	}
 });
 
 module.exports = router;

@@ -136,8 +136,16 @@ passport.use('google-employer', new GoogleStrategy({
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
 	res.locals.currentUser = req.user;
+	if(req.user) {
+		try {
+			let user = await User.findById(req.user._id).populate('notifications', null, { isRead: false }).exec();
+			res.locals.notifications = user.notifications.reverse();
+		} catch(err) {
+		  console.log(err.message);
+		}
+    }
 	res.locals.currentPath = req.path;
 	res.locals.error = req.flash('error');
 	res.locals.success = req.flash('success');
