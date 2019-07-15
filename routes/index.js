@@ -536,6 +536,18 @@ router.post("/reset/:token", (req, res) => {
 	});
 });
 
+// GET all notifications
+router.get("/notifications", middleware.isLoggedIn, async (req, res) => {
+	try {
+		let user = await User.findById(req.user._id).populate("notifications").exec();
+		res.render("users/notifications", { user });
+	} catch(err) {
+		req.flash('error', err.message);
+		res.redirect('back');
+	}
+});
+
+// Redirect to corresponding notification url
 router.get("/notifications/:id", middleware.isLoggedIn, async (req, res) => {
 	try {
 		let notification = await Notification.findById(req.params.id);

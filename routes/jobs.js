@@ -330,7 +330,8 @@ router.post("/jobs/:id/applicants/:applicantId/update-status", middleware.isLogg
 		job.save();
 		
 		let newNotification = {
-			text: "Your application status for " + job.role + " at " + job.company + " has been updated!",
+			shortText: "You have an application status update!",
+			fullText: "Your application status for: " + job.company + " (" + job.role + ") has been updated!",
 			url: "/jobs/" + req.params.id 
 		};
 		

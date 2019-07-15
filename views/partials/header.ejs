@@ -78,20 +78,28 @@ if (currentPath == "/") {
 						</li>
 						
 						<% } else { %>
-						<li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications <span class="badge"><%= notifications.length %></span></a>
-                          <ul class="dropdown-menu">
-                            <li>
-                                <a href="/notifications">View past notifications</a>
-                            </li>
-                            <% notifications.forEach(function(notification) { %>                          
-                                <li>
-                                    <a href="/notifications/<%= notification.id %>">
-                                        <%= notification.text %>
-                                    </a>
-                                </li>
+						<li class="nav-item dropdown">
+                          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Notifications 
+							  <% if (notifications.length > 0) { %>
+								  <span class="badge badge-light"><%= notifications.length %></span>
+							  <% } %>
+							</a>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                            <% notifications.forEach(function(notification) { %>      
+							  <a href="/notifications/<%= notification.id %>" class="dropdown-item">
+                              	<%= notification.shortText %>
+								  <p class="text-right m-0">
+									  <small class=""><%= moment(notification.createdAt).fromNow() %></small>
+								  </p>
+                              </a>
                             <% }); %>
+							  <% if (notifications.length > 0) { %>
+								  <div class="dropdown-divider"></div>
+							  <% } %>
+							  
+							<a href="/notifications" class="dropdown-item">View past notifications</a>
                           </ul>
+						
                         </li>
 						<li class="nav-item <%=activeProfile%>">
 							<a class="nav-link" href="/profile">Profile</a>

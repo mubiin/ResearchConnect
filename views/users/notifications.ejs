@@ -1,0 +1,22 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<p class="display-4">
+		Notifications
+	</p> 
+	<hr>
+	<div class="list-group">
+	<% user.notifications.forEach((notification) => { %>
+		<a href="<%= notification.url %>" class="list-group-item list-group-item-action">
+	  <%= notification.fullText %> <small><%= moment(notification.createdAt).fromNow() %></small>
+	</a>
+	<% }) %>
+	</div>
+</div>
+
+
+	
+
+
+
+<% include ../partials/footer %>

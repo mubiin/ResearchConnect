@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
 var notificationSchema = mongoose.Schema({
-	text: {type: String, required: true},
+	shortText: {type: String, required: true},
+	fullText: {type: String, required: true},
 	url: String,
-	isRead: {type: Boolean, default: false}
+	isRead: {type: Boolean, default: false},
+	createdAt: {type: Date, default: Date.now}
 });
 
 module.exports = mongoose.model("Notification", notificationSchema);
