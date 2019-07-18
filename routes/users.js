@@ -19,7 +19,13 @@ router.get("/profile", middleware.isLoggedIn, (req, res) => {
 			if (err){
 				console.log(err);
 			} else {
-				res.render("users/profile-employer", {user: user});
+				// Sort jobs by creation date/time
+				let jobs = user.jobsPosted.sort((a, b) => {
+					if(a.createdAt > b.createdAt) return -1;
+					if(a.createdAt < b.createdAt) return 1;
+					return 0;
+				});
+				res.render("users/profile-employer", {user: user, jobs: jobs});
 			}
 		});
 	}

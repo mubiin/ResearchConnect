@@ -37,6 +37,10 @@ app.locals._ = _;
 // Job.remove({}, (err, job) => {
 // });
 
+Job.find({}, (err, job) => {
+	job.status = "public";
+});
+
 mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true});
 
 // PASSPORT CONFIG

@@ -8,8 +8,12 @@
 			aria-selected="true">Profile</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" id="saved-jobs-tab" data-toggle="tab" href="#saved-jobs" role="tab" aria-controls="saved-jobs" 
-			aria-selected="false">Jobs Posted</a>
+			<a class="nav-link" id="public-jobs-tab" data-toggle="tab" href="#public-jobs" role="tab" aria-controls="public-jobs" 
+			aria-selected="false">Public Postings</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="archive-jobs-tab" data-toggle="tab" href="#archive-jobs" role="tab" aria-controls="archive-jobs" 
+			aria-selected="false">Archived Postings</a>
 		</li>
 		<li class="nav-item ml-auto">
 			<a class="nav-link" href="/jobs/new">Add Posting + </a>
@@ -43,21 +47,53 @@
 			</div>
 		</div>
 		
-		<div class="tab-pane fade" id="saved-jobs" role="tabpanel" aria-labelledby="saved-jobs-tab">
+		<div class="tab-pane fade" id="public-jobs" role="tabpanel" aria-labelledby="public-jobs-tab">
 			<div class="list-group my-4">
-				<% user.jobsPosted.reverse(); var i=1; user.jobsPosted.forEach((job) => { %>
+				<% var i=1; jobs.forEach((job) => { 
+					if (job.status === "public") { %>
 					<a href="/jobs/<%= job._id %>" class="list-group-item list-group-item-action">
 						<div class="d-flex w-100 justify-content-between">
 							<h5 class="mb-0"><%= i %>. <%= job.role %></h5>
-							<form action="/jobs/<%= job._id %>/applicants" style="display: inline">
+							<form action="/jobs/<%= job._id %>/applicants">
 								<button class="btn btn-outline-primary">View Applicants</button>
 							</form>
+							
 						</div>
+						
 						<p class="lead mb-0"><%= job.company %></p>
 						<p><%= job.location %></p>	
+						<form onsubmit="return confirm('Are you sure you want to change the status of this posting?');"
+							  action="/jobs/<%=job._id%>/status?_method=PUT" method="POST">
+							<input name="status" value="archive" style="display: none">
+							<button class="btn btn-outline-secondary">Archive Posting</button>
+						</form>
 					</a>
-				<% i+=1;
-				}); %>
+				<% i+=1; }}); %>
+			</div>
+		</div>
+		
+		<div class="tab-pane fade" id="archive-jobs" role="tabpanel" aria-labelledby="archive-jobs-tab">
+			<div class="list-group my-4">
+				<% var i=1; jobs.forEach((job) => { 
+					if (job.status === "archive") { %>
+					<a href="/jobs/<%= job._id %>" class="list-group-item list-group-item-action">
+						<div class="d-flex w-100 justify-content-between">
+							<h5 class="mb-0"><%= i %>. <%= job.role %></h5>
+							<form action="/jobs/<%= job._id %>/applicants">
+								<button class="btn btn-outline-primary">View Applicants</button>
+							</form>
+							
+						</div>
+						
+						<p class="lead mb-0"><%= job.company %></p>
+						<p><%= job.location %></p>	
+						<form onsubmit="return confirm('Are you sure you want to change the status of this posting?');"
+							  action="/jobs/<%=job._id%>/status?_method=PUT" method="POST">
+							<input name="status" value="public" style="display: none">
+							<button class="btn btn-outline-success">Publish Posting</button>
+						</form>
+					</a>
+				<% i+=1; }}); %>
 			</div>
 		</div>		
 	</div>

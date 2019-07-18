@@ -28,7 +28,10 @@ router.get("/jobs", (req, res) => {
 			page = req.query.p - 1;
 		}
 		const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-		Job.find({$or: [{company: regex,}, {role: regex}, {description: regex}]}).sort([['createdAt', -1]])
+		Job.find({$and: [
+			{status: "public"},
+			{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
+			.sort([['createdAt', -1]])
 			.skip(lim * page).limit(lim).exec(function(err, jobs) {
 			Job.countDocuments({$or: [{company: regex,}, {role: regex}, {description: regex}]}).exec((err, count) => {
 				if (err) {
@@ -48,7 +51,7 @@ router.get("/jobs", (req, res) => {
 		if (req.query.p) {
 			page = req.query.p - 1;
 		}
-		Job.find({}).sort([['createdAt', -1]]).skip(lim * page).limit(lim).exec(function(err, jobs) {
+		Job.find({status: "public"}).sort([['createdAt', -1]]).skip(lim * page).limit(lim).exec(function(err, jobs) {
 			Job.countDocuments({}).exec((err, count) => {
 				if (err) {
 					console.log(err);
@@ -112,16 +115,27 @@ router.get("/jobs/:id", (req, res) => {
 				else 
 					isAuthorized = false;
 
-				if (req.user.jobsSaved.some(job => job._id == req.params.id))
+				if (req.user.jobsSaved.some(job => job._id.equals(req.params.id)))
 					savedAlready = true;
 				
-				if (req.user.jobsApplied.some(job => job._id == req.params.id)) {
+				if (job.applicants.some(applicant => applicant.id.equals(req.user._id))) {
 					appliedAlready = true;
 					status = _.find(job.applicants, (elem) => { return elem.id.equals(req.user._id); }).status;
 				}
 			}
-			res.render("jobs/show", {job: job, isAuthorized: isAuthorized, savedAlready: savedAlready, 
+			
+			if (job.status === "archive") {
+				if (isAuthorized || appliedAlready) { 
+					res.render("jobs/show", {job: job, isAuthorized: isAuthorized, savedAlready: savedAlready, 
 								appliedAlready: appliedAlready, status: status});
+				} else {
+					req.flash('error', "Unable to access archived posting");
+					res.redirect('back');
+				}
+			} else {
+				res.render("jobs/show", {job: job, isAuthorized: isAuthorized, savedAlready: savedAlready, 
+								appliedAlready: appliedAlready, status: status});
+			}
 		}
 	});
 });
@@ -144,14 +158,33 @@ router.put("/jobs/:id", middleware.isLoggedIn, middleware.isEmployer, middleware
 	req.body.job.description = req.sanitize(req.body.job.description);
 	Job.findByIdAndUpdate(req.params.id, req.body.job, (err, job) => {
 		if (err) {
-			req.flash('error', "Error updating post!");
+			req.flash('error', "Error updating posting!");
 			res.redirect("/jobs");
 		}
 		else {
-			req.flash('success', "Updated post!");
+			req.flash('success', "Updated posting!");
 			res.redirect("/jobs/" + req.params.id);
 		}
 	});
+});
+
+
+// CHANGE job status (public/archive)
+router.put("/jobs/:id/status", middleware.isLoggedIn, middleware.isEmployer, middleware.checkJobOwnership, async (req, res) => {
+	try {	
+		let job = await Job.findById(req.params.id);
+		job.status = req.body.status;
+		if (req.body.status === "public") {
+			job.createdAt = Date.now();
+		}
+		job.save();
+		let flashMsg = (req.body.status === "public") ? "Posting published successfully" : "Posting archived successfully";
+		req.flash('success', flashMsg);
+		res.redirect('back');
+	} catch(err) {
+		req.flash('error', err.message);
+		res.redirect('back');
+	}
 });
 
 // DELETE job
