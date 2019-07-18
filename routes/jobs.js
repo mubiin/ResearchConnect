@@ -314,8 +314,14 @@ router.get("/jobs/:id/applicants/:applicantId/cover-letter", middleware.isLogged
 			res.redirect('back');
 		} else {
 			var coverLetter = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); }).coverLetter;
-			res.contentType(coverLetter.contentType);
-			res.send(coverLetter.data);
+			
+			if (typeof coverLetter.data !== 'undefined') {
+				res.contentType(coverLetter.contentType);
+				res.send(coverLetter.data);
+			} else {
+				req.flash('error', "No cover letter found!");
+				res.redirect('back');
+			}
 		}
 	});
 });
@@ -332,7 +338,7 @@ router.post("/jobs/:id/applicants/:applicantId/update-status", middleware.isLogg
 		let newNotification = {
 			shortText: "You have an application status update!",
 			fullText: "Your application status for: " + job.company + " (" + job.role + ") has been updated!",
-			url: "/jobs/" + req.params.id 
+			url: "/jobs/" + req.params.id
 		};
 		
 		let user = await User.findById(req.params.applicantId);

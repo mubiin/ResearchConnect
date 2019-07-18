@@ -59,10 +59,9 @@ $(function () {
   });
 });
 
+// Show add posting textwhen + icon is hovered
 $('#addIcon').hover(function() {
 	$('#addJob').fadeIn("medium", function(){});
 }, function() {
 	$('#addJob').fadeOut("fast", function(){});
 });
-
-

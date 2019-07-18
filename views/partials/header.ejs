@@ -1,4 +1,4 @@
-<% var activeHome = "", activeJob = "", activeSignup = "", activeLogin = "", activeProfile = "";
+<% var activeHome = "", activeJob = "", activeSignup = "", activeLogin = "", activeProfile = "", activeNotif = "";
 if (currentPath == "/") {
 	activeHome = "active";
 } else if (currentPath == "/jobs") {
@@ -9,6 +9,8 @@ if (currentPath == "/") {
 	activeLogin = "active";
 } else if (currentPath.includes("profile")) {
 	activeProfile = "active";
+} else if (currentPath.includes("notifications")) {
+	activeNotif = "active";
 } %>
 
 <!doctype html>
@@ -79,7 +81,7 @@ if (currentPath == "/") {
 						
 						<% } else { %>
 						<li class="nav-item dropdown">
-                          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Notifications 
+                          <a href="#" class="nav-link dropdown-toggle <%=activeNotif%>" data-toggle="dropdown" role="button" aria-haspopup="true">Notifications 
 							  <% if (notifications.length > 0) { %>
 								  <span class="badge badge-light"><%= notifications.length %></span>
 							  <% } %>

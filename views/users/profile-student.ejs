@@ -13,7 +13,7 @@
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" id="applications-tab" data-toggle="tab" href="#applications" role="tab" aria-controls="applications" 
-			aria-selected="false">Applications</a>
+			aria-selected="true">Applications</a>
 		</li>
 	</ul>
 	
@@ -118,12 +118,21 @@
 										Resume
 									</button>
 								</form>
+						
+						<% var coverLetter = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).coverLetter; %>
 								
 								<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/cover-letter" method="GET" 
 									  class="form-group mb-0 w-100 d-inline-flex justify-content-between">
-									<button class="btn btn-outline-success btn-sm">
-										Cover Letter
-									</button>
+									<% if (typeof coverLetter.data !== 'undefined') { %>
+										<button class="btn btn-outline-success btn-sm">
+											Cover Letter
+										</button>
+									<% } else { %>
+										<button class="btn btn-outline-success btn-sm disabled">
+											No cover letter found
+										</button>
+									<% } %>
+									
 									<span class="align-self-center">
 										<% var currStatus = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).status; 
 										var txtColor = "";
