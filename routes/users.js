@@ -3,14 +3,30 @@ const express = require('express'),
 	  User = require('../models/user'),
 	  Job = require('../models/job'),
 	  multer = require('multer'),
+	  fileType = require('file-type'),
 	  expressSanitizer = require('express-sanitizer'),
 	  methodOverride = require('method-override'),
 	  middleware = require('../middleware');
 
 // SET STORAGE
-var storage = multer.memoryStorage();
+const storage = multer.memoryStorage(),
+    accepted_extensions = ['pdf', 'doc', 'docx'],
+    maxFileSize = 5, // in MB
+    upload = multer({
+        storage: storage,
+        limits: {
+            fileSize: maxFileSize * 1024 * 1024 // 5 MB upload limit
+        },
+        fileFilter: (req, file, cb) => {
+            // if the file extension is in our accepted list
+            if (accepted_extensions.some(ext => file.originalname.endsWith('.' + ext))) {
+                return cb(null, true);
+            }
 
-var upload = multer({ storage: storage });
+            // otherwise, return error
+            return cb(new Error('Invalid file type! Only pdf & doc/docx files are accepted.'));
+        }
+    });
 
 // PROFILE
 router.get("/profile", middleware.isLoggedIn, (req, res) => {
@@ -51,27 +67,39 @@ router.get("/profile/edit", middleware.isLoggedIn, (req, res) => {
 });
 
 // HANDLE EDIT PROFILE
-router.post("/profile/edit", middleware.isLoggedIn, upload.single('resume'), (req, res) => {
-	if (req.file) {
-		var resume = {
-			contentType: req.file.mimetype, 
-			data: req.file.buffer
-		};
-		req.user.resume = resume;
-		req.user.save();
-	}
-	User.findByIdAndUpdate(req.user._id, req.body.user, (err, user) => {
+router.post("/profile/edit", middleware.isLoggedIn, (req, res) => {
+	upload.single('resume')(req, res, (err) => {
 		if (err) {
-			console.log(err);
-			req.flash('error', "Error updating profile!");
-			res.redirect('back');
-		} else {
-			if (user.isNewUser) user.isNewUser = false;
-			user.save();
-			req.flash('success', "Updated profile!");
-			res.redirect("/profile");
+			if (err.code === 'LIMIT_FILE_SIZE')
+				req.flash('error', "File is too large (max: " + maxFileSize + "MB)");
+			else 
+				req.flash('error', err.message);
+			
+			return res.redirect('back');
 		}
+		if (req.file) {
+			var resume = {
+				contentType: req.file.mimetype, 
+				data: req.file.buffer
+			};
+			req.user.resume = resume;
+			req.user.save();
+		}
+		User.findByIdAndUpdate(req.user._id, req.body.user, (err, user) => {
+			if (err) {
+				console.log(err);
+				req.flash('error', "Error updating profile!");
+				res.redirect('back');
+			} else {
+				if (user.isNewUser) user.isNewUser = false;
+				user.save();
+				req.flash('success', "Updated profile!");
+				res.redirect("/profile");
+			}
+		});
 	});
+	
+	
 });
 
 // LINK TO RESUME

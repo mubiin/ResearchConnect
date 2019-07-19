@@ -7,6 +7,7 @@ const express = require('express'),
 	  multer = require('multer'),
 	  fs = require('fs'),
 	  path = require('path'),
+	  fileType = require('file-type'),
 	  _ = require('underscore'),
 	  escapeRegex = require('escape-string-regexp'),
 	  middleware = require('../middleware'),
@@ -15,8 +16,13 @@ const express = require('express'),
 	  
 
 // SET STORAGE
-var storage = multer.memoryStorage();
-var upload = multer({ storage: storage });
+const storage = multer.memoryStorage();
+const upload = multer({
+	storage: storage,
+	limits: { 
+        fileSize: 5 * 1024 * 1024,  // 5 MB upload limit
+    }
+});
 
 // INDEX jobs
 router.get("/jobs", (req, res) => {

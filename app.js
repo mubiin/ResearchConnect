@@ -140,6 +140,7 @@ passport.use('google-employer', new GoogleStrategy({
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Populate user notifications
 app.use(async (req, res, next) => {
 	res.locals.currentUser = req.user;
 	if(req.user) {
