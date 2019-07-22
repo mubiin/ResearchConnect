@@ -59,9 +59,19 @@ $(function () {
   });
 });
 
-// Show add posting textwhen + icon is hovered
+// Show add posting text when + icon is hovered
 $('#addIcon').hover(function() {
 	$('#addJob').fadeIn("medium", function(){});
 }, function() {
 	$('#addJob').fadeOut("fast", function(){});
 });
+
+// Show next resume upload field upon "add new resume" button click
+for (let i = 0; i < 3; i++) {
+	$('.addResume' + i).on('click', function() {
+		$('.resumeForm' + (i+1)).show();
+		$(this).hide();
+	});
+}
+
+

@@ -16,13 +16,23 @@ const express = require('express'),
 	  
 
 // SET STORAGE
-const storage = multer.memoryStorage();
-const upload = multer({
-	storage: storage,
-	limits: { 
-        fileSize: 5 * 1024 * 1024,  // 5 MB upload limit
-    }
-});
+const storage = multer.memoryStorage(),
+    accepted_extensions = ['pdf', 'doc', 'docx'],
+    maxFileSize = 5, // in MB
+    upload = multer({
+        storage: storage,
+        limits: {
+            fileSize: maxFileSize * 1024 * 1024 // 5 MB upload limit
+        },
+        fileFilter: (req, file, cb) => {
+            // if the file extension is in our accepted list
+            if (accepted_extensions.some(ext => file.originalname.endsWith('.' + ext))) {
+                return cb(null, true);
+            }
+            // otherwise, return error
+            return cb(new Error('Invalid file type! Only pdf & doc/docx files are accepted.'));
+        }
+    });
 
 // INDEX jobs
 router.get("/jobs", (req, res) => {
@@ -257,7 +267,7 @@ router.get("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, midd
 });
 
 // HANDLE APPLICATION
-var uploadFields = upload.fields([{ name: 'resume', maxCount: 1 }, { name: 'coverLetter', maxCount: 1 }]);
+const uploadFields = upload.fields([{ name: 'resume', maxCount: 1 }, { name: 'coverLetter', maxCount: 1 }]);
 
 router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, middleware.isStudent, uploadFields, (req, res) => {
 	Job.findById(req.params.id, (err, job) => {

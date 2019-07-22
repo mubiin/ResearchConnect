@@ -12,10 +12,11 @@ var userSchema = mongoose.Schema({
 	major: String,
 	graduation: Date,
 	googleId: {type: String, unique: true},
-	resume: {
+	resumes: [{
 		contentType: String,
 		data: Buffer,
-	},
+		name: {type: String, default: ""}
+	}],
 	jobsSaved: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Job"

@@ -90,16 +90,66 @@
 					</select>
 				</div>
 				
-				<div class="input-group my-4">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="inputGroupFileAddon01">Resume</span>
+				<% if (user.resumes[0] || user.resumes[1] || user.resumes[2]) { %>
+				<div class="">
+					<span class="lead">Resumes:</span>
+					<% for(let i = 0; i < 3; i++) {
+						if(user.resumes[i]) { %>
+							<a class="m-0" href="/profile/resume/<%=i%>">Resume <%= i+1 %></a>
+							<% if(user.resumes[i+1]) { %>
+							•
+							<% } 
+					    } 
+					} %> 
+				</div>
+				<% } %>
+				
+				<div class="resumeForm1 mb-4">
+					<div class="input-group mt-4 mb-2">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="inputGroupFileAddon01">Resume 1</span>
+						</div>
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" name="resume1" id="inputGroupFile01" 
+								   aria-describedby="inputGroupFileAddon01">
+							<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+						</div>
 					</div>
-					<div class="custom-file">
-						<input type="file" class="custom-file-input" name="resume" id="inputGroupFile01" 
-							   aria-describedby="inputGroupFileAddon01">
-						<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+
+					<h5>
+						<a href=# class="addResume1"><i class="fas fa-plus-square"></i> <span class="lead">Add Resume</span></a>
+					</h5>
+				</div>
+				
+				<div class="resumeForm2 mb-4">
+					<div class="input-group mt-4 mb-2">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="inputGroupFileAddon01">Resume 2</span>
+						</div>
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" name="resume2" id="inputGroupFile01" 
+								   aria-describedby="inputGroupFileAddon01">
+							<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+						</div>
+					</div>
+					<h5>
+						<a href=# class="addResume2"><i class="fas fa-plus-square"></i> <span class="lead">Add Resume</span></a>
+					</h5>
+				</div>
+				
+				<div class="resumeForm3 mb-4">
+					<div class="input-group mt-4 mb-2">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="inputGroupFileAddon01">Resume 3</span>
+						</div>
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" name="resume3" id="inputGroupFile01" 
+								   aria-describedby="inputGroupFileAddon01">
+							<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+						</div>
 					</div>
 				</div>
+				
 				
 				<div class="form-row">
 					<div class="col-md-3">

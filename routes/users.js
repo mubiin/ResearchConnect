@@ -67,8 +67,12 @@ router.get("/profile/edit", middleware.isLoggedIn, (req, res) => {
 });
 
 // HANDLE EDIT PROFILE
+const uploadFields = upload.fields([{ name: 'resume1', maxCount: 1 }, 
+									{ name: 'resume2', maxCount: 1 }, 
+									{ name: 'resume3', maxCount: 1 }]);
+
 router.post("/profile/edit", middleware.isLoggedIn, (req, res) => {
-	upload.single('resume')(req, res, (err) => {
+	uploadFields(req, res, (err) => {
 		if (err) {
 			if (err.code === 'LIMIT_FILE_SIZE')
 				req.flash('error', "File is too large (max: " + maxFileSize + "MB)");
@@ -77,14 +81,19 @@ router.post("/profile/edit", middleware.isLoggedIn, (req, res) => {
 			
 			return res.redirect('back');
 		}
-		if (req.file) {
-			var resume = {
-				contentType: req.file.mimetype, 
-				data: req.file.buffer
-			};
-			req.user.resume = resume;
-			req.user.save();
+		for (let i = 1; i <= 3; i++) {
+			if (req.files['resume' + i]) {
+				console.log(req.files['resume' + i].fileName);
+				var resume = {
+					contentType: req.files['resume' + i][0].mimetype, 
+					data: req.files['resume' + i][0].buffer,
+					name: req.files['resume' + i][0].filename
+				};
+				req.user.resumes[i-1] = resume;
+				req.user.save();
+			}
 		}
+		
 		User.findByIdAndUpdate(req.user._id, req.body.user, (err, user) => {
 			if (err) {
 				console.log(err);
@@ -103,12 +112,12 @@ router.post("/profile/edit", middleware.isLoggedIn, (req, res) => {
 });
 
 // LINK TO RESUME
-router.get("/profile/resume", middleware.isLoggedIn, middleware.isStudent, (req, res) => {
-	if (req.user.resume.data) {
-		res.contentType(req.user.resume.contentType);
-		res.send(req.user.resume.data);
+router.get("/profile/resume/:i", middleware.isLoggedIn, middleware.isStudent, (req, res) => {
+	if (req.user.resumes[req.params.i]) {
+		res.contentType(req.user.resumes[req.params.i].contentType);
+		res.send(req.user.resumes[req.params.i].data);
 	} else
-		res.send("Oops! Couldn't find file...");
+		res.send("Resume not found!");
 });
 
 module.exports = router;

@@ -34,12 +34,14 @@
 				</div>
 				
 				<div class="col-md-4">
-					<p class="lead font-weight-bold mb-1">Resume:</p>
-					<% if (user.resume.data) { %>
-						<a class="lead" href="/profile/resume">View Resume</a>
-					<% } else { %>
-						<p class="lead">N/A</p>
-					<% } %>
+					<p class="lead font-weight-bold mb-1">Resumes:</p>
+					<% for(let i = 0; i < 3; i++) {
+						if(user.resumes[i]) { %>
+							<a class="lead m-0" href="/profile/resume/<%=i%>">Resume <%= i+1 %></a>
+							<br>
+						<% } 
+					} %> 
+					
 				</div>
 				
 				<div class="col-12">
@@ -119,7 +121,7 @@
 									</button>
 								</form>
 						
-						<% var coverLetter = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).coverLetter; %>
+						<% const coverLetter = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).coverLetter; %>
 								
 								<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/cover-letter" method="GET" 
 									  class="form-group mb-0 w-100 d-inline-flex justify-content-between">
