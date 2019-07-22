@@ -95,7 +95,7 @@
 					<span class="lead">Resumes:</span>
 					<% for(let i = 0; i < 3; i++) {
 						if(user.resumes[i]) { %>
-							<a class="m-0" href="/profile/resume/<%=i%>">Resume <%= i+1 %></a>
+							<a class="m-0" href="/profile/resume/resume-<%=i+1%>">Resume <%= i+1 %></a>
 							<% if(user.resumes[i+1]) { %>
 							•
 							<% } 

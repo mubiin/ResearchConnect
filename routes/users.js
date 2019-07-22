@@ -113,9 +113,11 @@ router.post("/profile/edit", middleware.isLoggedIn, (req, res) => {
 
 // LINK TO RESUME
 router.get("/profile/resume/:i", middleware.isLoggedIn, middleware.isStudent, (req, res) => {
-	if (req.user.resumes[req.params.i]) {
-		res.contentType(req.user.resumes[req.params.i].contentType);
-		res.send(req.user.resumes[req.params.i].data);
+	const idx = req.params.i[req.params.i.length-1]-1,
+		  resume = req.user.resumes[idx];
+	if (resume) {
+		res.contentType(resume.contentType);
+		res.send(resume.data);
 	} else
 		res.send("Resume not found!");
 });
