@@ -279,8 +279,9 @@ router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, mid
 			if (!req.user.jobsApplied.some(job => job._id == req.params.id)) {
 				let resume;
 				if (req.body.defaultResume) {
-					resume = req.user.resume;
-				} else {
+					let idx = req.body.defaultResume[req.body.defaultResume.length - 1] - 1;
+					resume = req.user.resumes[idx];
+				} else {					
 					if (req.files['resume']) {
 						resume = {
 							contentType: req.files['resume'][0].mimetype,

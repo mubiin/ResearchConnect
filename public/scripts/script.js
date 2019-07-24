@@ -21,14 +21,12 @@ $('#navbar-container').removeClass("mb-4");
 $('#verifyNotice').removeClass("mb-4");
 
 // Handle resume upload visual
-$('#resumeCheck').on('change', function() {
+$('.resumeCheck').on('change', function() {
 	if (this.checked) {
-		console.log("CHECKED");
 		$('#inputGroupFile01').attr('disabled', 'disabled');
 	}
 	else {
 		$('#inputGroupFile01').removeAttr('disabled');
-		console.log("UNCHECKED");
 	}
 });
 

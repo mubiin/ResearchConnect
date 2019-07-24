@@ -35,7 +35,7 @@
 				
 				<div class="col-md-4">
 					<p class="lead font-weight-bold mb-1">Resumes:</p>
-					<% for(let i = 0; i < 3; i++) {
+					<% for(let i = 0; i < user.resumes.length; i++) {
 						if(user.resumes[i]) { %>
 							<a class="lead m-0" href="/profile/resume/resume-<%=i+1%>">Resume <%= i+1 %></a>
 							<br>
