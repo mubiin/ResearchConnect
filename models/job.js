@@ -8,7 +8,7 @@ var jobSchema = mongoose.Schema({
 	description: {type: String, required: true},
 	createdAt: {type: Date, default: Date.now},
 	deadline: {type: Date, required: true},
-	status: {type: String},
+	status: {type: String, default: "archive"},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
