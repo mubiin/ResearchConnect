@@ -34,14 +34,18 @@ app.use(flash());
 app.locals.moment = require('moment');
 app.locals._ = _;
 
-// Job.remove({}, (err, job) => {
-// });
-
 Job.find({}, (err, job) => {
 	job.status = "public";
 });
 
-mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true});
+// Connect to MongoDB Atlas server
+mongoose.connect(process.env.DB_HOST, {
+	useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true
+}).then(() => {
+	console.log("Connected to MongoDB Atlas!");
+}).catch(err => {
+	console.log("ERROR: " + err.message);
+});
 
 // PASSPORT CONFIG
 // ==================
