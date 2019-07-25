@@ -78,7 +78,7 @@ router.post("/register/student", [
 		major: req.body.major,
 		graduation: req.body.graduation,
 		isEmployer: false,
-		isVerified: false
+		isVerified: true
 	});
 		
 	User.register(newUser, req.body.password, (err, user) => {
@@ -87,33 +87,37 @@ router.post("/register/student", [
 			return res.redirect("/register/employer");
 		}
 		passport.authenticate("local")(req, res, () => {
-			crypto.randomBytes(20, (err, buf) => {
-				if (err) {
-					console.log(err);
-					req.flash('error', "Error creating password reset token!");
-					return res.redirect("/forgot");
-				}
-				var token = buf.toString('hex');
-				user.verificationToken = token;
-				user.save();
-				var mailData = {
-				  from: 'ResearchConnect <donotreply@researchconnect.com>',
-				  to: req.body.email,
-				  subject: 'Verify your email',
-				  text:
-					'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
-					'https://' + req.headers.host + '/verify/' + token + '\n'
-				};
+			req.flash('success', 'Welcome to ResearchConnect!');
+			res.redirect("/jobs");
+			// crypto.randomBytes(20, (err, buf) => {
+			// 	if (err) {
+			// 		console.log(err);
+			// 		req.flash('error', "Error creating password reset token!");
+			// 		return res.redirect("/forgot");
+			// 	}
+			// 	var token = buf.toString('hex');
+			// 	user.verificationToken = token;
+			// 	user.save();
+			// 	var mailData = {
+			// 	  from: 'ResearchConnect <donotreply@researchconnect.com>',
+			// 	  to: req.body.email,
+			// 	  subject: 'Verify your email',
+			// 	  text:
+			// 		'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
+			// 		'https://' + req.headers.host + '/verify/' + token + '\n'
+			// 	};
 
-				mailgun.messages().send(mailData, function (error, body) {
-					if (error) 
-						console.log(error);
-					else {
-						req.flash('success', 'Please verify your email to start posting!');
-						res.redirect("/verify");
-					}
-				});
-			});
+			// 	mailgun.messages().send(mailData, function (error, body) {
+			// 		if (error) {
+			// 			req.flash('error', "Error sending verification email");
+			// 			res.redirect('back');
+			// 		}
+			// 		else {
+			// 			req.flash('success', 'Please verify your email to start applying!');
+			// 			res.redirect("/verify");
+			// 		}
+			// 	});
+			// });
 			
 		});
 	});
@@ -164,7 +168,7 @@ router.post("/register/employer", [
 		lastName: req.body.lastName,
 		company: req.body.company,
 		isEmployer: true,
-		isVerified: false
+		isVerified: true
 	});
 
 	User.register(newUser, req.body.password, (err, user) => {
@@ -173,34 +177,37 @@ router.post("/register/employer", [
 			return res.redirect("/register/employer");
 		}
 		passport.authenticate("local")(req, res, () => {
-			crypto.randomBytes(20, (err, buf) => {
-				if (err) {
-					console.log(err);
-					req.flash('error', "Error creating password reset token!");
-					return res.redirect("/forgot");
-				}
-				var token = buf.toString('hex');
-				user.verificationToken = token;
-				user.save();
-				var mailData = {
-				  from: 'ResearchConnect <donotreply@researchconnect.com>',
-				  to: req.body.email,
-				  subject: 'Verify your email',
-				  text: 
-					'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
-					'https://' + req.headers.host + '/verify/' + token + '\n'
-				};
+			req.flash('success', 'Welcome to ResearchConnect!');
+			res.redirect("/jobs");
+			// crypto.randomBytes(20, (err, buf) => {
+			// 	if (err) {
+			// 		console.log(err);
+			// 		req.flash('error', "Error creating password reset token!");
+			// 		return res.redirect("/forgot");
+			// 	}
+			// 	var token = buf.toString('hex');
+			// 	user.verificationToken = token;
+			// 	user.save();
+			// 	var mailData = {
+			// 	  from: 'ResearchConnect <donotreply@researchconnect.com>',
+			// 	  to: req.body.email,
+			// 	  subject: 'Verify your email',
+			// 	  text: 
+			// 		'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
+			// 		'https://' + req.headers.host + '/verify/' + token + '\n'
+			// 	};
 
-				mailgun.messages().send(mailData, function (error, body) {
-					if (error) 
-						console.log(error);
-					else {
-						req.flash('success', 'Please verify your email to start posting!');
-						res.redirect("/verify");
-					}
-				});
-			});
-			
+			// 	mailgun.messages().send(mailData, function (error, body) {
+			// 		if (error) {
+			// 			req.flash('error', "Error sending verification email");
+			// 			res.redirect('back');
+			// 		}
+			// 		else {
+			// 			req.flash('success', 'Please verify your email to start posting!');
+			// 			res.redirect("/verify");
+			// 		}
+			// 	});
+			// });
 		});
 	});
 });
@@ -264,7 +271,10 @@ router.post('/verify/resend', middleware.isLoggedIn, (req, res) => {
         };
 
         mailgun.messages().send(mailData, function(error, body) {
-            if (error) console.log(error);
+            if (error) {
+				req.flash('error', "Error sending email");
+				res.redirect('back');
+			}
             else {
                 req.flash('success', 'Verification email sent!');
                 res.redirect('back');
@@ -318,8 +328,10 @@ router.get("/verify/:token", (req, res) => {
 			};
 
 			mailgun.messages().send(mailData, function (error, body) {
-				if (error) 
-					console.log(error);
+				if (error) {
+					req.flash('error', "Error sending email");
+					res.redirect('back');
+				}
 				else {
 					req.flash('success', 'Your email has been successfully verified!');
 					done(error);
@@ -432,8 +444,10 @@ router.post("/forgot", (req, res) => {
 			};
 
 			mailgun.messages().send(mailData, function (error, body) {
-				if (error) 
-					console.log(error);
+				if (error) {
+					req.flash('error', "Error sending email");
+					res.redirect('back');
+				}
 				else {
 					req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
 					done(error);
@@ -518,8 +532,10 @@ router.post("/reset/:token", (req, res) => {
 			};
 
 			mailgun.messages().send(mailData, function (error, body) {
-				if (error) 
-					console.log(error);
+				if (error) {
+					req.flash('error', "Error sending email");
+					res.redirect('back');
+				}
 				else {
 					req.flash('success', 'Password successfully updated!');
 					done(error);
