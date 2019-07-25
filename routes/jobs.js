@@ -104,7 +104,7 @@ router.post("/jobs", middleware.isLoggedIn, middleware.isEmployer, middleware.is
 			req.user.jobsPosted.push(job);
 			req.user.save();
 			job.save();
-			req.flash('success', "Job posted!");
+			req.flash('success', "Posting created! You may 'Publish' below.");
 			res.redirect("/jobs/" + job._id);
 		}
 	});
