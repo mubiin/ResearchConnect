@@ -2,7 +2,7 @@ const mongoose = require('mongoose'),
 	  passportLocalMongoose = require('passport-local-mongoose');
 
 var userSchema = mongoose.Schema({
-	email: {type: String, unique: true},
+	email: {type: String},
 	password: String,
 	firstName: String,
 	middleName: String,
@@ -11,7 +11,7 @@ var userSchema = mongoose.Schema({
 	faculty: String,
 	major: String,
 	graduation: Date,
-	googleId: {type: String, unique: true},
+	googleId: {type: String},
 	resumes: [{
 		contentType: String,
 		data: Buffer,
