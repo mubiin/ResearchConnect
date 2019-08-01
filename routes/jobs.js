@@ -75,10 +75,7 @@ router.get("/jobs", (req, res) => {
 					}
 				});
 			});
-		}
-		
-		// Filters: only commitment
-		if (!req.query.paid && req.query.commitment) {
+		} else if (!req.query.paid && req.query.commitment) { // Filters: only commitment
 			Job.find({$and: [
 				{status: "public"},
 				{workLoad: req.query.commitment},
@@ -106,10 +103,7 @@ router.get("/jobs", (req, res) => {
 					}
 				});
 			});
-		}	
-		
-		// Filters: Both paid & commitment
-		if (req.query.paid && req.query.commitment) {
+		} else if (req.query.paid && req.query.commitment) { // Filters: Both paid & commitment
 			Job.find({$and: [
 				{status: "public"},
 				{paid: req.query.paid},
@@ -139,32 +133,31 @@ router.get("/jobs", (req, res) => {
 					}
 				});
 			});
-		}	
-		
-		// Just search query (no filters)
-		Job.find({$and: [
-			{status: "public"},
-			{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
-			.sort([['createdAt', -1]])
-			.skip(lim * page).limit(lim).exec(function(err, jobs) {
-			Job.countDocuments({$or: [{company: regex,}, {role: regex}, {description: regex}]}).exec((err, count) => {
-				if (err) {
-					console.log(err);
-					req.flash('error', err.message);
-					return res.redirect('back');
-				} else {
-					return res.render("jobs/index", {
-						jobs: jobs,
-						search: req.query.search,
-						paid: false,
-						commitment: false,
-						pages: Math.ceil(count / lim),
-						currPage: page+1
-					});
-				}
+		} else { // Just search query (no filters)
+			Job.find({$and: [
+				{status: "public"},
+				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
+				.sort([['createdAt', -1]])
+				.skip(lim * page).limit(lim).exec(function(err, jobs) {
+				Job.countDocuments({$or: [{company: regex,}, {role: regex}, {description: regex}]}).exec((err, count) => {
+					if (err) {
+						console.log(err);
+						req.flash('error', err.message);
+						return res.redirect('back');
+					} else {
+						return res.render("jobs/index", {
+							jobs: jobs,
+							search: req.query.search,
+							paid: false,
+							commitment: false,
+							pages: Math.ceil(count / lim),
+							currPage: page+1
+						});
+					}
+				});
+
 			});
-			
-		});
+		}
 	} else { // No search query
 		if (req.query.p) {
 			page = req.query.p - 1;
@@ -197,10 +190,7 @@ router.get("/jobs", (req, res) => {
 					}
 				});
 			});
-		}
-		
-		// Filters: only commitment
-		if (!req.query.paid && req.query.commitment) {
+		} else if (!req.query.paid && req.query.commitment) { // Filters: only commitment
 			Job.find({$and: [
 				{status: "public"},
 				{workLoad: req.query.commitment}]})
@@ -226,10 +216,7 @@ router.get("/jobs", (req, res) => {
 					}
 				});
 			});
-		}
-		
-		// Filters: both paid & commitment
-		if (req.query.paid && req.query.commitment) {
+		} else if (req.query.paid && req.query.commitment) { // Filters: both paid & commitment
 			Job.find({$and: [
 				{status: "public"},
 				{paid: req.query.paid},
@@ -257,26 +244,25 @@ router.get("/jobs", (req, res) => {
 					}
 				});
 			});
+		} else { // Index ALL jobs
+			Job.find({status: "public"}).sort([['createdAt', -1]]).skip(lim * page).limit(lim).exec(function(err, jobs) {
+				Job.countDocuments({}).exec((err, count) => {
+					if (err) {
+						req.flash('error', err.message);
+						return res.redirect('back');
+					} else {
+						return res.render("jobs/index", {
+							jobs: jobs,
+							search: false,
+							paid: false,
+							commitment: false,
+							pages: Math.ceil(count / lim),
+							currPage: page+1
+						});
+					}
+				});
+			});			
 		}
-		
-		// Index ALL jobs		
-		Job.find({status: "public"}).sort([['createdAt', -1]]).skip(lim * page).limit(lim).exec(function(err, jobs) {
-			Job.countDocuments({}).exec((err, count) => {
-				if (err) {
-					req.flash('error', err.message);
-					return res.redirect('back');
-				} else {
-					return res.render("jobs/index", {
-						jobs: jobs,
-						search: false,
-						paid: false,
-						commitment: false,
-						pages: Math.ceil(count / lim),
-						currPage: page+1
-					});
-				}
-			});
-		});
 	}
 });
 
