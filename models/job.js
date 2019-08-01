@@ -5,6 +5,8 @@ var jobSchema = mongoose.Schema({
 	role: {type: String, required: true},
 	location: {type: String, required: true},
 	workLoad: {type: String, required: true},
+	paid: {type: String},
+	term: {type: String},
 	description: {type: String, required: true},
 	createdAt: {type: Date, default: Date.now},
 	deadline: {type: Date, required: true},

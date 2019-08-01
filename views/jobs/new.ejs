@@ -1,10 +1,11 @@
 <% include ../partials/header %>
+<title>Create New Posting - ResearchConnect</title>
 
 <div class="container border rounded py-4 px-5">
 
 	<form onsubmit="return confirm('Are you sure?');" action="/jobs" method="POST">
 		<p class="display-4 text-center">
-			Post a Job
+			Create Posting
 		</p>
 		<hr>
 		<div class="form-group">
@@ -29,12 +30,39 @@
 		
 		<div class="form-group">
 			<p class="mb-1 lead">Job Description:</p>
-			<div class="btn-group btn-group-toggle mb-2" data-toggle="buttons">
+			<div class="btn-group btn-group-toggle mb-2 mr-2" data-toggle="buttons">
 				<label class="btn btn-outline-primary btn-sm active">
 					<input type="radio" name="job[workLoad]" value="Full-time" checked required> Full-time
 		  		</label>
 				<label class="btn btn-outline-primary btn-sm">
 					<input type="radio" name="job[workLoad]" value="Part-time" required> Part-time
+				</label>	
+				<label class="btn btn-outline-primary btn-sm">
+					<input type="radio" name="job[workLoad]" value="One-off" required> One-off
+				</label>
+			</div>
+			
+			<div class="btn-group btn-group-toggle mb-2 mr-2" data-toggle="buttons">
+				<label class="btn btn-outline-primary btn-sm active">
+					<input type="radio" name="job[paid]" value="Paid" checked required>Paid
+		  		</label>
+				<label class="btn btn-outline-primary btn-sm">
+					<input type="radio" name="job[paid]" value="Volunteer" required>Volunteer
+				</label>	
+			</div>
+			
+			<div class="btn-group btn-group-toggle mb-2" data-toggle="buttons">
+				<label class="btn btn-outline-primary btn-sm">
+					<input type="checkbox" name="job[term]" value="Winter T1">Winter T1
+		  		</label>
+				<label class="btn btn-outline-primary btn-sm">
+					<input type="checkbox" name="job[term]" value="Winter T2">Winter T2
+		  		</label>
+				<label class="btn btn-outline-primary btn-sm">
+					<input type="checkbox" name="job[term]" value="Summer T1">Summer T1
+				</label>	
+				<label class="btn btn-outline-primary btn-sm">
+					<input type="checkbox" name="job[term]" value="Summer T2">Summer T2
 				</label>	
 			</div>
 		</div>

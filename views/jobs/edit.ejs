@@ -1,17 +1,62 @@
 <% include ../partials/header %>
+<title>Edit Posting: <%=job.role%> - ResearchConnect</title>
 
-<% var activeFull, activePart, checkFull, checkPart;
-if (job.workLoad == "Full-time") {
-	activeFull = "active";
-	checkFull = "checked";
-	activePart = ""
-	checkPart = "";
-} else {
-	activeFull = "";
-	checkFull = "";
-	activePart = "active"
-	checkPart = "checked";
-} %>
+<% let activeFull, activePart, checkFull, checkPart, activeOne, checkOne;
+switch(job.workLoad) {
+	case "Full-time":
+		activeFull = "active", checkFull = "checked", activePart = "", checkPart = "", activeOne = "", checkOne = "";
+		break;
+	case "Part-time":
+		activeFull = "", checkFull = "", activePart = "active", checkPart = "checked", activeOne = "", checkOne = "";
+		break;
+	case "One-off":
+		activeFull = "", checkFull = "", activePart = "", checkPart = "", activeOne = "active", checkOne = "checked";
+		break;		
+}
+
+let activePaid, checkPaid, activeVol, checkVol;
+switch(job.paid) {
+	case "Paid":
+		activePaid = "active", checkPaid = "checked", activeVol = "", checkVol = "";
+		break;
+	case "Volunteer":
+		activePaid = "", checkPaid = "", activeVol = "active", checkVol = "checked";
+		break;
+}
+
+let activeW1, checkW1, activeW2, checkW2, activeS1, checkS1, activeS2, checkS2;
+if (job.term.includes("Winter T1")) {
+	activeW1 = "active";
+	checkW1 = "checked";
+}
+if (job.term.includes("Winter T2")) { 
+	activeW2 = "active";
+	checkW2 = "checked";
+}
+if (job.term.includes("Summer T1")) { 
+	activeS1 = "active";
+	checkS1 = "checked";
+}
+if (job.term.includes("Summer T2")) { 
+	activeS2 = "active";
+	checkS2 = "checked";
+}
+
+// switch(job.term) {
+// 	case "Winter T1": 
+// 		activeW1 = "active", checkW1 = "checked", activeW2="",checkW2="",activeS1="",checkS1="",activeS2="",checkS2="";
+// 		break;
+// 	case "Winter T2":
+// 		activeW1 = "",checkW1 = "", activeW2="active", checkW2="checked", activeS1="",checkS1="",activeS2="",checkS2="";
+// 		break;
+// 	case "Summer T1":
+// 		activeW1 = "",checkW1 = "",activeW2="",checkW2="", activeS1="active", checkS1="checked", activeS2="",checkS2="";
+// 		break;
+// 	case "Summer T2":
+// 		activeW1 = "",checkW1 = "",activeW2="",checkW2="",activeS1="",checkS1="", activeS2="active", checkS2="checked";
+// 		break;		
+// }
+%>
 
 <div class="container border rounded py-4 px-5">
 	<form onsubmit="return confirm('Confirm changes');" action="/jobs/<%=job._id%>?_method=PUT" method="POST">
@@ -43,14 +88,41 @@ if (job.workLoad == "Full-time") {
 		
 		<div class="form-group">
 			<p class="mb-1 lead">Job Description:</p>
-			<div class="btn-group btn-group-toggle mb-2" data-toggle="buttons">
+			<div class="btn-group btn-group-toggle mb-2 mr-2" data-toggle="buttons">
 				<label class="btn btn-outline-primary btn-sm <%=activeFull%>">
 					<input type="radio" name="job[workLoad]" value="Full-time" <%=checkFull%> required> Full-time
 		  		</label>
 				<label class="btn btn-outline-primary btn-sm <%=activePart%>">
 					<input type="radio" name="job[workLoad]" value="Part-time" <%=checkPart%> required> Part-time
 				</label>	
+				<label class="btn btn-outline-primary btn-sm <%=activeOne%>">
+					<input type="radio" name="job[workLoad]" value="One-off" <%=checkOne%> required> One-off
+				</label>
 			</div>
+			
+			<div class="btn-group btn-group-toggle mb-2 mr-2" data-toggle="buttons">
+				<label class="btn btn-outline-primary btn-sm <%=activePaid%>">
+					<input type="radio" name="job[paid]" value="Paid" <%=checkPaid%> required>Paid
+		  		</label>
+				<label class="btn btn-outline-primary btn-sm <%=activeVol%>">
+					<input type="radio" name="job[paid]" value="Volunteer" <%=checkVol%> required>Volunteer
+				</label>	
+			</div>
+			
+			<div class="btn-group btn-group-toggle mb-2" data-toggle="buttons">
+				<label class="btn btn-outline-primary btn-sm <%=activeW1%>">
+					<input type="checkbox" name="job[term]" value="Winter T1" <%=checkW1%> >Winter T1
+		  		</label>
+				<label class="btn btn-outline-primary btn-sm <%=activeW2%>">
+					<input type="checkbox" name="job[term]" value="Winter T2" <%=checkW2%> >Winter T2
+		  		</label>
+				<label class="btn btn-outline-primary btn-sm <%=activeS1%>">
+					<input type="checkbox" name="job[term]" value="Summer T1" <%=checkS1%> >Summer T1
+				</label>	
+				<label class="btn btn-outline-primary btn-sm <%=activeS2%>">
+					<input type="checkbox" name="job[term]" value="Summer T2" <%=checkS2%> >Summer T2
+				</label>	
+			</div>			
 		</div>
 		
 		<div class="form-group">

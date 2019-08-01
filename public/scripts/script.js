@@ -40,22 +40,22 @@ $('#coverLetterCheck').on('change', function() {
 	}
 });
 
-// Make navbar responsive to scrolling up/down
-$(function () {
-  var lastScrollTop = 0;
-  var $navbar = $('.navbar');
+// // Make navbar responsive to scrolling up/down
+// $(function () {
+//   var lastScrollTop = 0;
+//   var $navbar = $('.navbar');
 
-  $(window).scroll(function(event){
-    var st = $(this).scrollTop();
+//   $(window).scroll(function(event){
+//     var st = $(this).scrollTop();
 
-    if (st > lastScrollTop) { // scroll down
-      $navbar.hide();
-    } else { // scroll up
-      $navbar.show();
-    }
-    lastScrollTop = st;
-  });
-});
+//     if (st > lastScrollTop) { // scroll down
+//       $navbar.hide();
+//     } else { // scroll up
+//       $navbar.show();
+//     }
+//     lastScrollTop = st;
+//   });
+// });
 
 // Show add posting text when + icon is hovered
 $('#addIcon').hover(function() {

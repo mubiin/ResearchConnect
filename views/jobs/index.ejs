@@ -1,9 +1,17 @@
 <% include ../partials/header %> 
+<title>Browse Postings - ResearchConnect</title>
 
-<% var searchQuery = "";
+<% let searchQuery = "", paidQuery = "", commitmentQuery = "";
 if (search) {
-	searchQuery = "search="+search+"&";
-} %>
+	searchQuery = "search=" + search + "&";
+} 
+if (paid) {
+	paidQuery = "paid=" + paid + "&";
+}
+if (commitment) {
+	commitmentQuery = "commitment=" + commitment + "&";
+}
+%>
 
 
 <div class="container">
@@ -31,7 +39,7 @@ if (search) {
 
 					<div class="card-body h-100">
 						<h5 class="card-title mb-0"><%= job.role %></h5>
-						<p class="lead"><%= job.workLoad %></p>
+						<p class="lead"><%= job.workLoad %> • <%= job.paid%></p>
 						<p class="font-weight-light"><%= moment(job.createdAt).fromNow() %></p>
 						<hr>
 						<a href="/jobs/<%= job._id %>" class="btn btn-primary">More Info</a>
@@ -47,7 +55,7 @@ if (search) {
 			<% for(var i=1; i <= pages; i++) { 
 				var active = ""; if (i == currPage) active = "active"; %>
 				<li class="page-item <%=active%>">
-				<a class="page-link" href="/jobs?<%=searchQuery%>p=<%= i %>">
+				<a class="page-link" href="/jobs?<%=searchQuery%><%=paidQuery%><%=commitmentQuery%>p=<%= i %>">
 					<%= i %>
 				</a>
 			</li>

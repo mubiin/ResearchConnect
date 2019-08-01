@@ -39,11 +39,109 @@ router.get("/jobs", (req, res) => {
 	var lim = 2;
 	var page = 0;
 	
+	// If search query exists
 	if (req.query.search) {
 		if (req.query.p) {
 			page = req.query.p - 1;
 		}
 		const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+		
+		// Filters: only paid
+		if (req.query.paid && !req.query.commitment) {
+			Job.find({$and: [
+				{status: "public"},
+				{paid: req.query.paid},
+				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
+				.sort([['createdAt', -1]])
+				.skip(lim * page).limit(lim).exec(function(err, jobs) {
+				
+				Job.countDocuments({$and: [
+				{status: "public"},
+				{paid: req.query.paid},
+				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]}).exec((err, count) => {
+					if (err) {
+						console.log(err);
+						req.flash('error', err.message);
+						return res.redirect('back');
+					} else {
+						return res.render("jobs/index", {
+							jobs: jobs,
+							search: req.query.search,
+							paid: req.query.paid,
+							commitment: false,
+							pages: Math.ceil(count / lim),
+							currPage: page+1
+						});
+					}
+				});
+			});
+		}
+		
+		// Filters: only commitment
+		if (!req.query.paid && req.query.commitment) {
+			Job.find({$and: [
+				{status: "public"},
+				{workLoad: req.query.commitment},
+				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
+				.sort([['createdAt', -1]])
+				.skip(lim * page).limit(lim).exec(function(err, jobs) {
+				
+				Job.countDocuments({$and: [
+				{status: "public"},
+				{workLoad: req.query.commitment},
+				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]}).exec((err, count) => {
+					if (err) {
+						console.log(err);
+						req.flash('error', err.message);
+						return res.redirect('back');
+					} else {
+						return res.render("jobs/index", {
+							jobs: jobs,
+							search: req.query.search,
+							paid: false,
+							commitment: req.query.commitment,
+							pages: Math.ceil(count / lim),
+							currPage: page+1
+						});
+					}
+				});
+			});
+		}	
+		
+		// Filters: Both paid & commitment
+		if (req.query.paid && req.query.commitment) {
+			Job.find({$and: [
+				{status: "public"},
+				{paid: req.query.paid},
+				{workLoad: req.query.commitment},
+				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
+				.sort([['createdAt', -1]])
+				.skip(lim * page).limit(lim).exec(function(err, jobs) {
+				
+				Job.countDocuments({$and: [
+				{status: "public"},
+				{paid: req.query.paid},
+				{workLoad: req.query.commitment},
+				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]}).exec((err, count) => {
+					if (err) {
+						console.log(err);
+						req.flash('error', err.message);
+						return res.redirect('back');
+					} else {
+						return res.render("jobs/index", {
+							jobs: jobs,
+							search: req.query.search,
+							paid: req.query.paid,
+							commitment: req.query.commitment,
+							pages: Math.ceil(count / lim),
+							currPage: page+1
+						});
+					}
+				});
+			});
+		}	
+		
+		// Just search query (no filters)
 		Job.find({$and: [
 			{status: "public"},
 			{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
@@ -52,10 +150,14 @@ router.get("/jobs", (req, res) => {
 			Job.countDocuments({$or: [{company: regex,}, {role: regex}, {description: regex}]}).exec((err, count) => {
 				if (err) {
 					console.log(err);
+					req.flash('error', err.message);
+					return res.redirect('back');
 				} else {
 					return res.render("jobs/index", {
 						jobs: jobs,
 						search: req.query.search,
+						paid: false,
+						commitment: false,
 						pages: Math.ceil(count / lim),
 						currPage: page+1
 					});
@@ -63,24 +165,117 @@ router.get("/jobs", (req, res) => {
 			});
 			
 		});
-	} else {
+	} else { // No search query
 		if (req.query.p) {
 			page = req.query.p - 1;
 		}
+		
+		// Filters: only paid
+		if (req.query.paid && !req.query.commitment) {
+			Job.find({$and: [
+				{status: "public"},
+				{paid: req.query.paid}]})
+				.sort([['createdAt', -1]])
+				.skip(lim * page).limit(lim).exec(function(err, jobs) {
+				
+				Job.countDocuments({$and: [
+					{status: "public"},
+					{paid: req.query.paid}]}).exec((err, count) => {
+					if (err) {
+						console.log(err);
+						req.flash('error', err.message);
+						return res.redirect('back');
+					} else {
+						return res.render("jobs/index", {
+							jobs: jobs,
+							search: req.query.search,
+							paid: req.query.paid,
+							commitment: false,
+							pages: Math.ceil(count / lim),
+							currPage: page+1
+						});
+					}
+				});
+			});
+		}
+		
+		// Filters: only commitment
+		if (!req.query.paid && req.query.commitment) {
+			Job.find({$and: [
+				{status: "public"},
+				{workLoad: req.query.commitment}]})
+				.sort([['createdAt', -1]])
+				.skip(lim * page).limit(lim).exec(function(err, jobs) {
+				
+				Job.countDocuments({$and: [
+					{status: "public"},
+					{workLoad: req.query.commitment}]}).exec((err, count) => {
+					if (err) {
+						console.log(err);
+						req.flash('error', err.message);
+						return res.redirect('back');
+					} else {
+						return res.render("jobs/index", {
+							jobs: jobs,
+							search: req.query.search,
+							paid: false,
+							commitment: req.query.commitment,
+							pages: Math.ceil(count / lim),
+							currPage: page+1
+						});
+					}
+				});
+			});
+		}
+		
+		// Filters: both paid & commitment
+		if (req.query.paid && req.query.commitment) {
+			Job.find({$and: [
+				{status: "public"},
+				{paid: req.query.paid},
+				{workLoad: req.query.commitment}]})
+				.sort([['createdAt', -1]])
+				.skip(lim * page).limit(lim).exec(function(err, jobs) {
+				
+				Job.countDocuments({$and: [
+					{status: "public"},
+					{paid: req.query.paid},
+					{workLoad: req.query.commitment}]}).exec((err, count) => {
+					if (err) {
+						console.log(err);
+						req.flash('error', err.message);
+						return res.redirect('back');
+					} else {
+						return res.render("jobs/index", {
+							jobs: jobs,
+							search: req.query.search,
+							paid: req.query.paid,
+							commitment: req.query.commitment,
+							pages: Math.ceil(count / lim),
+							currPage: page+1
+						});
+					}
+				});
+			});
+		}
+		
+		// Index ALL jobs		
 		Job.find({status: "public"}).sort([['createdAt', -1]]).skip(lim * page).limit(lim).exec(function(err, jobs) {
 			Job.countDocuments({}).exec((err, count) => {
 				if (err) {
-					console.log(err);
+					req.flash('error', err.message);
+					return res.redirect('back');
 				} else {
 					return res.render("jobs/index", {
 						jobs: jobs,
 						search: false,
+						paid: false,
+						commitment: false,
 						pages: Math.ceil(count / lim),
 						currPage: page+1
 					});
 				}
 			});
-			
 		});
 	}
 });
@@ -93,8 +288,12 @@ router.get("/jobs/new", middleware.isLoggedIn, middleware.isEmployer, middleware
 // CREATE job
 router.post("/jobs", middleware.isLoggedIn, middleware.isEmployer, middleware.isVerified, (req, res) => {
 	req.body.job.description = req.sanitize(req.body.job.description);
+	if (typeof req.body.job.term !== 'string') {
+		req.body.job.term = req.body.job.term.join(' & ');
+	}
 	var newJob = req.body.job;
 	newJob.owner = req.user;
+	
 	Job.create(newJob, (err, job) => {
 		if (err) {
 			console.log(err);
@@ -172,8 +371,16 @@ router.get("/jobs/:id/edit", middleware.isLoggedIn, middleware.isEmployer, middl
 // UPDATE job
 router.put("/jobs/:id", middleware.isLoggedIn, middleware.isEmployer, middleware.checkJobOwnership, (req, res) => {
 	req.body.job.description = req.sanitize(req.body.job.description);
+	if (typeof req.body.job.term !== 'string' && typeof req.body.job.term !== 'undefined') {
+		req.body.job.term = req.body.job.term.join(' & ');
+	}
+	if (typeof req.body.job.term === 'undefined') {
+		req.body.job.term = "";
+	}
+	
 	Job.findByIdAndUpdate(req.params.id, req.body.job, (err, job) => {
 		if (err) {
+			console.log(err.message);
 			req.flash('error', "Error updating posting!");
 			res.redirect("/jobs");
 		}
@@ -186,7 +393,8 @@ router.put("/jobs/:id", middleware.isLoggedIn, middleware.isEmployer, middleware
 
 
 // CHANGE job status (public/archive)
-router.put("/jobs/:id/status", middleware.isLoggedIn, middleware.isEmployer, middleware.checkJobOwnership, async (req, res) => {
+router.put("/jobs/:id/status", middleware.isLoggedIn, middleware.isEmployer, middleware.checkJobOwnership,
+		   async (req, res) => {
 	try {	
 		let job = await Job.findById(req.params.id);
 		job.status = req.body.status;
@@ -269,61 +477,71 @@ router.get("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, midd
 // HANDLE APPLICATION
 const uploadFields = upload.fields([{ name: 'resume', maxCount: 1 }, { name: 'coverLetter', maxCount: 1 }]);
 
-router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, middleware.isStudent, uploadFields, (req, res) => {
-	Job.findById(req.params.id, (err, job) => {
+router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, middleware.isStudent, (req, res) => {
+	uploadFields(req, res, (err) => {
 		if (err) {
-			console.log(err);
-			req.flash('error', "Error uploading application!");
-			res.redirect("/jobs/" + req.params.id);
-		} else {
-			if (!req.user.jobsApplied.some(job => job._id == req.params.id)) {
-				let resume;
-				if (req.body.defaultResume) {
-					let idx = req.body.defaultResume[req.body.defaultResume.length - 1] - 1;
-					resume = req.user.resumes[idx];
-				} else {					
-					if (req.files['resume']) {
-						resume = {
-							contentType: req.files['resume'][0].mimetype,
-							data: req.files['resume'][0].buffer
+			if (err.code === 'LIMIT_FILE_SIZE')
+				req.flash('error', "File is too large (max: " + maxFileSize + "MB)");
+			else 
+				req.flash('error', err.message);
+			
+			return res.redirect('back');
+		}
+		Job.findById(req.params.id, (err, job) => {
+			if (err) {
+				console.log(err);
+				req.flash('error', "Error uploading application!");
+				res.redirect("/jobs/" + req.params.id);
+			} else {
+				if (!req.user.jobsApplied.some(job => job._id == req.params.id)) {
+					let resume;
+					if (req.body.defaultResume) {
+						let idx = req.body.defaultResume[req.body.defaultResume.length - 1] - 1;
+						resume = req.user.resumes[idx];
+					} else {					
+						if (req.files['resume']) {
+							resume = {
+								contentType: req.files['resume'][0].mimetype,
+								data: req.files['resume'][0].buffer
+							};
+						} else {
+							resume = null;
+						}
+					}	
+
+					let coverLetter;
+					if (req.files['coverLetter']) {
+						coverLetter = {
+							contentType: req.files['coverLetter'][0].mimetype,
+							data: req.files['coverLetter'][0].buffer
 						};
 					} else {
-						resume = null;
+						coverLetter = null;
 					}
-				}	
-				
-				let coverLetter;
-				if (req.files['coverLetter']) {
-					coverLetter = {
-						contentType: req.files['coverLetter'][0].mimetype,
-						data: req.files['coverLetter'][0].buffer
-					};
-				} else {
-					coverLetter = null;
-				}
 
-				var name;
-				if (req.user.middleName == "")
-					name = req.user.firstName + " " + req.user.lastName;
-				else
-					name = req.user.firstName + " " + req.user.middleName + " " + req.user.lastName;
-				
-				job.applicants.push({
-					id: req.user._id,
-					fullName: name,
-					email: req.user.email,
-					resume: resume,
-					coverLetter: coverLetter,
-					status: "In progress"
-				});
-				
-				job.save();
-				req.user.jobsApplied.push(job);
-				req.user.save();
+					var name;
+					if (req.user.middleName == "")
+						name = req.user.firstName + " " + req.user.lastName;
+					else
+						name = req.user.firstName + " " + req.user.middleName + " " + req.user.lastName;
+
+					job.applicants.push({
+						id: req.user._id,
+						fullName: name,
+						email: req.user.email,
+						resume: resume,
+						coverLetter: coverLetter,
+						status: "In progress"
+					});
+
+					job.save();
+					req.user.jobsApplied.push(job);
+					req.user.save();
+				}
+				req.flash('success', "Application submitted!");
+				res.redirect("/jobs/" + req.params.id);
 			}
-			req.flash('success', "Application submitted!");
-			res.redirect("/jobs/" + req.params.id);
-		}
+		});
 	});
 });
 
