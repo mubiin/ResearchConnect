@@ -39,230 +39,95 @@ router.get("/jobs", (req, res) => {
 	var lim = 2;
 	var page = 0;
 	
-	// If search query exists
+	let paidQuery, commitmentQuery, paid, commitment, filterExists = true;
+	if (req.query.paid && !req.query.commitment) {	// Filters: only PAID
+		paidQuery = { paid: req.query.paid };
+		commitmentQuery = {};
+		paid = req.query.paid;
+		commitment = false;
+	} else if (!req.query.paid && req.query.commitment) {	// Filters: only COMMITMENT
+		paidQuery = {};
+		commitmentQuery = { workLoad: req.query.commitment };
+		paid = false;
+		commitment = req.query.commitment;
+	} else if (req.query.paid && req.query.commitment) {	// Filters: both PAID & COMMITMENT
+		paidQuery = { paid: req.query.paid };
+		commitmentQuery = { workLoad: req.query.commitment };
+		paid = req.query.paid;
+		commitment = req.query.commitment;
+	} else {	// Filters: NONE
+		paidQuery = {};
+		commitmentQuery = {};
+		paid = false;
+		commitment = false;
+		filterExists = false;
+	}
+	
+	// IF SEARCH QUERY EXISTS
 	if (req.query.search) {
 		if (req.query.p) {
 			page = req.query.p - 1;
 		}
+		
 		const regex = new RegExp(escapeRegex(req.query.search), 'gi');
 		
-		// Filters: only paid
-		if (req.query.paid && !req.query.commitment) {
-			Job.find({$and: [
-				{status: "public"},
-				{paid: req.query.paid},
-				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
-				.sort([['createdAt', -1]])
-				.skip(lim * page).limit(lim).exec(function(err, jobs) {
-				
-				Job.countDocuments({$and: [
-				{status: "public"},
-				{paid: req.query.paid},
-				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]}).exec((err, count) => {
-					if (err) {
-						console.log(err);
-						req.flash('error', err.message);
-						return res.redirect('back');
-					} else {
-						return res.render("jobs/index", {
-							jobs: jobs,
-							search: req.query.search,
-							paid: req.query.paid,
-							commitment: false,
-							pages: Math.ceil(count / lim),
-							currPage: page+1
-						});
-					}
-				});
+		Job.find({$and: [
+			{status: "public"},
+			paidQuery, commitmentQuery,
+			{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
+			.sort([['createdAt', -1]])
+			.skip(lim * page).limit(lim).exec(function(err, jobs) {
+			
+			Job.countDocuments({$and: [
+			{status: "public"},
+			paidQuery, commitmentQuery,
+			{$or: [{company: regex,}, {role: regex}, {description: regex}]}]}).exec((err, count) => {
+				if (err) {
+					console.log(err);
+					req.flash('error', err.message);
+					return res.redirect('back');
+				} else {
+					return res.render("jobs/index", {
+						jobs: jobs,
+						search: req.query.search,
+						paid: paid,
+						commitment: commitment,
+						filterExists: filterExists,
+						pages: Math.ceil(count / lim),
+						currPage: page+1
+					});
+				}
 			});
-		} else if (!req.query.paid && req.query.commitment) { // Filters: only commitment
-			Job.find({$and: [
-				{status: "public"},
-				{workLoad: req.query.commitment},
-				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
-				.sort([['createdAt', -1]])
-				.skip(lim * page).limit(lim).exec(function(err, jobs) {
-				
-				Job.countDocuments({$and: [
-				{status: "public"},
-				{workLoad: req.query.commitment},
-				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]}).exec((err, count) => {
-					if (err) {
-						console.log(err);
-						req.flash('error', err.message);
-						return res.redirect('back');
-					} else {
-						return res.render("jobs/index", {
-							jobs: jobs,
-							search: req.query.search,
-							paid: false,
-							commitment: req.query.commitment,
-							pages: Math.ceil(count / lim),
-							currPage: page+1
-						});
-					}
-				});
-			});
-		} else if (req.query.paid && req.query.commitment) { // Filters: Both paid & commitment
-			Job.find({$and: [
-				{status: "public"},
-				{paid: req.query.paid},
-				{workLoad: req.query.commitment},
-				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
-				.sort([['createdAt', -1]])
-				.skip(lim * page).limit(lim).exec(function(err, jobs) {
-				
-				Job.countDocuments({$and: [
-				{status: "public"},
-				{paid: req.query.paid},
-				{workLoad: req.query.commitment},
-				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]}).exec((err, count) => {
-					if (err) {
-						console.log(err);
-						req.flash('error', err.message);
-						return res.redirect('back');
-					} else {
-						return res.render("jobs/index", {
-							jobs: jobs,
-							search: req.query.search,
-							paid: req.query.paid,
-							commitment: req.query.commitment,
-							pages: Math.ceil(count / lim),
-							currPage: page+1
-						});
-					}
-				});
-			});
-		} else { // Just search query (no filters)
-			Job.find({$and: [
-				{status: "public"},
-				{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
-				.sort([['createdAt', -1]])
-				.skip(lim * page).limit(lim).exec(function(err, jobs) {
-				Job.countDocuments({$or: [{company: regex,}, {role: regex}, {description: regex}]}).exec((err, count) => {
-					if (err) {
-						console.log(err);
-						req.flash('error', err.message);
-						return res.redirect('back');
-					} else {
-						return res.render("jobs/index", {
-							jobs: jobs,
-							search: req.query.search,
-							paid: false,
-							commitment: false,
-							pages: Math.ceil(count / lim),
-							currPage: page+1
-						});
-					}
-				});
-
-			});
-		}
-	} else { // No search query
+		});
+	} else { // IF NO SEARCH QUERY
 		if (req.query.p) {
 			page = req.query.p - 1;
 		}
 		
-		// Filters: only paid
-		if (req.query.paid && !req.query.commitment) {
-			Job.find({$and: [
-				{status: "public"},
-				{paid: req.query.paid}]})
-				.sort([['createdAt', -1]])
-				.skip(lim * page).limit(lim).exec(function(err, jobs) {
-				
-				Job.countDocuments({$and: [
-					{status: "public"},
-					{paid: req.query.paid}]}).exec((err, count) => {
-					if (err) {
-						console.log(err);
-						req.flash('error', err.message);
-						return res.redirect('back');
-					} else {
-						return res.render("jobs/index", {
-							jobs: jobs,
-							search: req.query.search,
-							paid: req.query.paid,
-							commitment: false,
-							pages: Math.ceil(count / lim),
-							currPage: page+1
-						});
-					}
-				});
+		Job.find({$and: [{ status: 'public' }, paidQuery, commitmentQuery]})
+		.sort([['createdAt', -1]])
+		.skip(lim * page)
+		.limit(lim)
+		.exec(function(err, jobs) {
+			Job.countDocuments({
+				$and: [{ status: 'public' }, paidQuery, commitmentQuery]}).exec((err, count) => {
+				if (err) {
+					console.log(err);
+					req.flash('error', err.message);
+					return res.redirect('back');
+				} else {
+					return res.render('jobs/index', {
+						jobs: jobs,
+						search: false,
+						paid: paid,
+						commitment: commitment,
+						filterExists: filterExists,
+						pages: Math.ceil(count / lim),
+						currPage: page + 1
+					});
+				}
 			});
-		} else if (!req.query.paid && req.query.commitment) { // Filters: only commitment
-			Job.find({$and: [
-				{status: "public"},
-				{workLoad: req.query.commitment}]})
-				.sort([['createdAt', -1]])
-				.skip(lim * page).limit(lim).exec(function(err, jobs) {
-				
-				Job.countDocuments({$and: [
-					{status: "public"},
-					{workLoad: req.query.commitment}]}).exec((err, count) => {
-					if (err) {
-						console.log(err);
-						req.flash('error', err.message);
-						return res.redirect('back');
-					} else {
-						return res.render("jobs/index", {
-							jobs: jobs,
-							search: req.query.search,
-							paid: false,
-							commitment: req.query.commitment,
-							pages: Math.ceil(count / lim),
-							currPage: page+1
-						});
-					}
-				});
-			});
-		} else if (req.query.paid && req.query.commitment) { // Filters: both paid & commitment
-			Job.find({$and: [
-				{status: "public"},
-				{paid: req.query.paid},
-				{workLoad: req.query.commitment}]})
-				.sort([['createdAt', -1]])
-				.skip(lim * page).limit(lim).exec(function(err, jobs) {
-				
-				Job.countDocuments({$and: [
-					{status: "public"},
-					{paid: req.query.paid},
-					{workLoad: req.query.commitment}]}).exec((err, count) => {
-					if (err) {
-						console.log(err);
-						req.flash('error', err.message);
-						return res.redirect('back');
-					} else {
-						return res.render("jobs/index", {
-							jobs: jobs,
-							search: req.query.search,
-							paid: req.query.paid,
-							commitment: req.query.commitment,
-							pages: Math.ceil(count / lim),
-							currPage: page+1
-						});
-					}
-				});
-			});
-		} else { // Index ALL jobs
-			Job.find({status: "public"}).sort([['createdAt', -1]]).skip(lim * page).limit(lim).exec(function(err, jobs) {
-				Job.countDocuments({}).exec((err, count) => {
-					if (err) {
-						req.flash('error', err.message);
-						return res.redirect('back');
-					} else {
-						return res.render("jobs/index", {
-							jobs: jobs,
-							search: false,
-							paid: false,
-							commitment: false,
-							pages: Math.ceil(count / lim),
-							currPage: page+1
-						});
-					}
-				});
-			});			
-		}
+		});
 	}
 });
 

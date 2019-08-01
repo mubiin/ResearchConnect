@@ -1,3 +1,8 @@
+// Prevent dropdown from closing upon click
+$('.dropdown-menu').click(function(e) {
+    e.stopPropagation();
+});
+
 // Clean file path string
 $('.custom-file-input').on('change', function() {
     //get the file name
@@ -71,5 +76,6 @@ for (let i = 0; i < 3; i++) {
 		$(this).hide();
 	});
 }
+
 
 

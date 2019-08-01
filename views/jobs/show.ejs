@@ -5,7 +5,7 @@
 	<div class="row justify-content-center">
 		<div class="col-12 mb-4">
 			<div class="card">
-				<div class="card-header pb-0 pb-md-2">
+				<div class="card-header pb-0 pb-md-2 bg-secondary text-light">
 					<h3 class="mb-0">
 						<%= job.role %> 
 						
@@ -60,7 +60,7 @@
 						<% } %>
 				</div>
 
-				<div class="card-body">
+				<div class="card-body bg-light">
 					<h5 class="mb-0">Job Description:</h5>
 					<p class="lead"><%= job.workLoad %> • <%= job.paid%> 
 						<% if (job.term !== "") { %> • <% } %> <%= job.term%></p>
