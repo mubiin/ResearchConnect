@@ -326,7 +326,9 @@ router.get("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, midd
 });
 
 // HANDLE APPLICATION
-const uploadFields = upload.fields([{ name: 'resume', maxCount: 1 }, { name: 'coverLetter', maxCount: 1 }]);
+const uploadFields = upload.fields([{ name: 'resume', maxCount: 1 },
+									{ name: 'coverLetter', maxCount: 1 }, 
+									{ name: 'transcript', maxCount: 1 }]);
 
 router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, middleware.isStudent, (req, res) => {
 	uploadFields(req, res, (err) => {
@@ -369,6 +371,16 @@ router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, mid
 					} else {
 						coverLetter = null;
 					}
+					
+					let transcript;
+					if (req.files['transcript']) {
+						transcript = {
+							contentType: req.files['transcript'][0].mimetype,
+							data: req.files['transcript'][0].buffer
+						};
+					} else {
+						transcript = null;
+					}
 
 					var name;
 					if (req.user.middleName == "")
@@ -382,6 +394,7 @@ router.post("/jobs/:id/apply", middleware.isLoggedIn, middleware.isVerified, mid
 						email: req.user.email,
 						resume: resume,
 						coverLetter: coverLetter,
+						transcript: transcript,
 						status: "In progress"
 					});
 
@@ -417,7 +430,7 @@ router.get("/jobs/:id/applicants/:applicantId/resume", middleware.isLoggedIn, mi
 			req.flash('error', "Error retrieving resume!");
 			res.redirect('back');
 		} else {
-			var resume = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); }).resume;
+			let resume = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); }).resume;
 			res.contentType(resume.contentType);
 			res.send(resume.data);
 		}
@@ -432,13 +445,34 @@ router.get("/jobs/:id/applicants/:applicantId/cover-letter", middleware.isLogged
 			req.flash('error', "Error retrieving cover letter!");
 			res.redirect('back');
 		} else {
-			var coverLetter = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); }).coverLetter;
+			let coverLetter = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); }).coverLetter;
 			
 			if (typeof coverLetter.data !== 'undefined') {
 				res.contentType(coverLetter.contentType);
 				res.send(coverLetter.data);
 			} else {
 				req.flash('error', "No cover letter found!");
+				res.redirect('back');
+			}
+		}
+	});
+});
+
+// VIEW TRANSCRIPT OF APPLICANT
+router.get("/jobs/:id/applicants/:applicantId/transcript", middleware.isLoggedIn, middleware.checkDocAuthorization, (req, res) => {
+	Job.findById(req.params.id, (err, job) => {
+		if (err) {
+			console.log(err);
+			req.flash('error', "Error retrieving cover letter!");
+			res.redirect('back');
+		} else {
+			let transcript = _.find(job.applicants, (elem) => { return elem.id.equals(req.params.applicantId); }).transcript;
+			
+			if (typeof transcript.data !== 'undefined') {
+				res.contentType(transcript.contentType);
+				res.send(transcript.data);
+			} else {
+				req.flash('error', "No transcript found!");
 				res.redirect('back');
 			}
 		}

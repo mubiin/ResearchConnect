@@ -5,7 +5,7 @@
 	<div class="row justify-content-center">
 		<div class="col-12 mb-4">
 			<div class="card">
-				<div class="card-header pb-0 pb-md-2 bg-secondary text-light">
+				<div class="card-header pb-0 pb-md-2">
 					<h3 class="mb-0">
 						<%= job.role %> 
 						
@@ -55,12 +55,16 @@
 								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/resume" class="btn btn-outline-success">Resume</a>
 								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/cover-letter" 
 								   class="btn btn-outline-success">Cover Letter</a>
+								
+								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/transcript" 
+								   class="btn btn-outline-success">Transcript</a>
+								
 								<p class="float-md-right mt-2 mt-md-0 mb-1">Status: <span class="<%=txtColor%>"><%=status%></span> </p>
 							</p>
 						<% } %>
 				</div>
 
-				<div class="card-body bg-light">
+				<div class="card-body">
 					<h5 class="mb-0">Job Description:</h5>
 					<p class="lead"><%= job.workLoad %> • <%= job.paid%> 
 						<% if (job.term !== "") { %> • <% } %> <%= job.term%></p>

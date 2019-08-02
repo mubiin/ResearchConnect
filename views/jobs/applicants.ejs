@@ -15,6 +15,7 @@
 			<th scope="col">Full name</th>
 			<th scope="col">Resume</th>
 			<th scope="col">Cover Letter</th>
+			<th scope="col">Transcript</th>
 			<th scope="col">Change Status <small>(one at a time)</small></th>
 		</tr>
 	</thead>
@@ -42,6 +43,12 @@
 					<% } else { %>
 						<td>N/A</td>
 					<% } %>  
+					
+					<% if (typeof applicant.transcript.data !== 'undefined') { %> 
+						<td><a href="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/transcript">View Transcript</a></td>
+					<% } else { %>
+						<td>N/A</td>
+					<% } %> 
 					
 					<td>
 						<select class="form-control change-status" name="status">

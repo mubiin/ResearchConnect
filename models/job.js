@@ -31,6 +31,10 @@ var jobSchema = mongoose.Schema({
 			contentType: String,
 			data: Buffer
 		},
+		transcript: {
+			contentType: String,
+			data: Buffer
+		},
 		status: {type: String, deafult: "In progress"}
 	}],
 });

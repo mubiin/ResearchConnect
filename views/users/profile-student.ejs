@@ -3,7 +3,6 @@
 <% include ../partials/header %>
 
 <div class="container">
-	<%= user._id %>
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
 		<li class="nav-item">
 			<a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" 
@@ -39,8 +38,8 @@
 					<p class="lead font-weight-bold mb-1">Resumes:</p>
 					<% for(let i = 0; i < user.resumes.length; i++) {
 						if(user.resumes[i]) { %>
-							<a class="lead m-0" href="/profile/resume/resume-<%=i+1%>">Resume <%= i+1 %></a>
-							<br>
+						<a class="lead m-0" href="/profile/resume/resume-<%=i+1%>">Resume <%= i+1 %></a>
+						<br>
 						<% } 
 					} %> 
 					
@@ -78,27 +77,27 @@
 		<div class="tab-pane fade" id="saved-jobs" role="tabpanel" aria-labelledby="saved-jobs-tab">
 			<div class="list-group my-4">
 				<% user.jobsSaved.reverse(); user.jobsSaved.forEach((job) => { %>
-					<a href="/jobs/<%= job._id %>" class="list-group-item list-group-item-action">
-						<div class="d-flex w-100 justify-content-between">
-							
-								<h5 class="mb-0"><%= job.role %> 
-									
-								</h5>
-							
-							<small>Application Deadline: 
-								<span class="font-weight-light">
-									<%= moment(job.deadline).format("MMM Do, YYYY") %>
-								</span>
-							</small>
-						</div>
-						<p class="lead mb-0"><%= job.company %></p>
-						<form action="/jobs/<%= job._id %>/unsave" method="GET" class="form-inline d-flex justify-content-between">
-							<span><%= job.location %></span>
-							<button class="btn btn-outline-info btn">Unsave</button>
-						</form>	
+				<a href="/jobs/<%= job._id %>" class="list-group-item list-group-item-action">
+					<div class="d-flex w-100 justify-content-between">
 						
+						<h5 class="mb-0"><%= job.role %> 
+							
+						</h5>
 						
-					</a>
+						<small>Application Deadline: 
+							<span class="font-weight-light">
+								<%= moment(job.deadline).format("MMM Do, YYYY") %>
+							</span>
+						</small>
+					</div>
+					<p class="lead mb-0"><%= job.company %></p>
+					<form action="/jobs/<%= job._id %>/unsave" method="GET" class="form-inline d-flex justify-content-between">
+						<span><%= job.location %></span>
+						<button class="btn btn-outline-info btn">Unsave</button>
+					</form>	
+					
+					
+				</a>
 				<% }); %>
 			</div>
 		</div>
@@ -107,50 +106,63 @@
 		<div class="tab-pane fade" id="applications" role="tabpanel" aria-labelledby="applications-tab">
 			<div class="list-group my-4">
 				<% user.jobsApplied.reverse(); user.jobsApplied.forEach((job) => { %>
-					<a href="/jobs/<%= job._id %>" class="list-group-item list-group-item-action">
-						<div class="d-flex w-100 justify-content-between">
-							<h5 class="mb-0"><%= job.role %> 
-								
-							</h5>
+				<a href="/jobs/<%= job._id %>" class="list-group-item list-group-item-action">
+					<div class="d-flex w-100 justify-content-between">
+						<h5 class="mb-0"><%= job.role %> 
 							
-						</div>
-						<p class="lead mb-0"><%= job.company %></p>
-						<p><%= job.location %></p>	
+						</h5>
 						
-						<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/resume" method="GET" class="form-group mb-2">
-									<button class="btn btn-outline-success btn-sm">
-										Resume
-									</button>
-								</form>
-						
-						<% const coverLetter = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).coverLetter; %>
-								
-								<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/cover-letter" method="GET" 
-									  class="form-group mb-0 w-100 d-inline-flex justify-content-between">
-									<% if (typeof coverLetter.data !== 'undefined') { %>
-										<button class="btn btn-outline-success btn-sm">
-											Cover Letter
-										</button>
-									<% } else { %>
-										<button class="btn btn-outline-success btn-sm disabled">
-											No cover letter found
-										</button>
-									<% } %>
-									
-									<span class="align-self-center">
-										<% var currStatus = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).status; 
-										var txtColor = "";
-										if (currStatus == "Accepted")
-											txtColor = "text-success";
-										if (currStatus == "Rejected")
-											txtColor = "text-danger";
-										if (currStatus == "Waitlisted")
-											txtColor = "text-primary";
-										%>
-										Status: <span class="<%= txtColor %> font-weight-bold"><%= currStatus %></span>
-									</span>
-								</form>
-					</a>
+					</div>
+					<p class="lead mb-0"><%= job.company %></p>
+					<p><%= job.location %></p>	
+					
+					<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/resume" method="GET" class="form-group mb-2">
+						<button class="btn btn-outline-success btn-sm">
+							Resume
+						</button>
+					</form>
+					
+					<% const coverLetter = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).coverLetter,
+					transcript = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).transcript; %>
+					<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/cover-letter" method="GET" 
+						class="form-group mb-2 w-100 d-inline-flex justify-content-between">
+						<% if (typeof coverLetter.data !== 'undefined') { %>
+						<button class="btn btn-outline-success btn-sm">
+							Cover Letter
+						</button>
+						<% } else { %>
+						<button class="btn btn-outline-success btn-sm disabled">
+							No cover letter found
+						</button>
+						<% } %>
+					</form>
+					
+					<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/transcript" method="GET" 
+						class="form-group mb-0 w-100 d-inline-flex justify-content-between">
+						<% if (typeof transcript.data !== 'undefined') { %>
+						<button class="btn btn-outline-success btn-sm">
+							Transcript
+						</button>
+						<% } else { %>
+						<button class="btn btn-outline-success btn-sm disabled">
+							No transcript found
+						</button>
+						<% } %>
+						<span class="align-self-center">
+							<% var currStatus = _.find(job.applicants, function(elem){ 
+								return elem.id.equals(user._id) }).status; 
+							var txtColor = "";
+							if (currStatus == "Accepted")
+								txtColor = "text-success";
+							if (currStatus == "Rejected")
+								txtColor = "text-danger";
+							if (currStatus == "Waitlisted")
+								txtColor = "text-primary";
+							%>
+							Status: <span class="<%= txtColor %> font-weight-bold"><%= currStatus %></span>
+						</span>
+					</form>
+				</a>
 				<% }); %>
 			</div>
 		</div>
