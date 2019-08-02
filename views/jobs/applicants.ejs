@@ -37,7 +37,12 @@
 						<%= applicant.fullName %> 
 						<p> <small><em> <%= applicant.email %> </em></small> </p>
 					</td>
-					<td><a href="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/resume">View Resume</a></td>
+					<% if (typeof applicant.resume.data !== 'undefined') { %> 
+						<td><a href="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/resume">View Resume</a></td>
+					<% } else { %>
+						<td>N/A</td>
+					<% } %>  
+					
 					<% if (typeof applicant.coverLetter.data !== 'undefined') { %> 
 						<td><a href="/jobs/<%= job._id %>/applicants/<%= applicant.id %>/cover-letter">View Cover Letter</a></td>
 					<% } else { %>

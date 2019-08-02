@@ -50,14 +50,26 @@
 							if (status == "Waitlisted")
 								txtColor = "text-primary";
 						} 
-						if (appliedAlready) { %>
+						if (appliedAlready) {
+							const applicant = _.find(job.applicants, elem => { return elem.id.equals(currentUser._id) }),
+								  coverLetter = applicant.coverLetter, 
+								  transcript = applicant.transcript,
+								  resume = applicant.resume; %>
 							<p class="mb-0">
-								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/resume" class="btn btn-outline-success">Resume</a>
-								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/cover-letter" 
-								   class="btn btn-outline-success">Cover Letter</a>
+								<% if (typeof resume.data !== 'undefined') { %>
+								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/resume" 
+								   class="btn btn-outline-success btn-sm">Resume</a>	
+								<% } %>
 								
+								<% if (typeof coverLetter.data !== 'undefined') { %>
+								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/cover-letter" 
+								   class="btn btn-outline-success btn-sm">Cover Letter</a>
+								<% } %>
+								
+								<% if (typeof transcript.data !== 'undefined') { %>
 								<a href="/jobs/<%=job._id%>/applicants/<%=currentUser._id%>/transcript" 
-								   class="btn btn-outline-success">Transcript</a>
+								   class="btn btn-outline-success btn-sm">Transcript</a>	
+								<% } %>
 								
 								<p class="float-md-right mt-2 mt-md-0 mb-1">Status: <span class="<%=txtColor%>"><%=status%></span> </p>
 							</p>

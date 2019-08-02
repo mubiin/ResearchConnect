@@ -114,16 +114,26 @@
 						
 					</div>
 					<p class="lead mb-0"><%= job.company %></p>
-					<p><%= job.location %></p>	
+					<p><%= job.location %></p>
+					
+					<% const applicant = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }), 
+						  coverLetter = applicant.coverLetter, 
+						  transcript = applicant.transcript,
+						  resume = applicant.resume; %>
 					
 					<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/resume" method="GET" class="form-group mb-2">
-						<button class="btn btn-outline-success btn-sm">
-							Resume
-						</button>
+							<% if (typeof resume.data !== 'undefined') { %>
+							<button class="btn btn-outline-success btn-sm">
+								Resume
+							</button>
+							<% } else { %>
+							<button class="btn btn-outline-success btn-sm disabled">
+								No resume found
+							</button>
+							<% } %>
 					</form>
 					
-					<% const coverLetter = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).coverLetter,
-					transcript = _.find(job.applicants, function(elem){ return elem.id.equals(user._id) }).transcript; %>
+					
 					<form action="/jobs/<%=job._id%>/applicants/<%=user._id%>/cover-letter" method="GET" 
 						class="form-group mb-2 w-100 d-inline-flex justify-content-between">
 						<% if (typeof coverLetter.data !== 'undefined') { %>
