@@ -36,7 +36,7 @@ const storage = multer.memoryStorage(),
 
 // INDEX jobs
 router.get("/jobs", (req, res) => {
-	var lim = 2;
+	var lim = 15;
 	var page = 0;
 	
 	let paidQuery, commitmentQuery, grantQuery, paid, commitment, grant, filterExists = true;
