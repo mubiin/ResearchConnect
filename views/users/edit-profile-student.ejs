@@ -2,16 +2,9 @@
 
 <% include ../partials/header %>
 
-<% var schools = [
-	"The University of British Columbia (UBC)",
-	"Simon Fraser University (SFU)"
-], faculties = [
-	"Arts",
-	"Science"
-], majors = [
-	"Cognitive Systems",
-	"Computer Science"
-] %>	
+<% const schools = ["The University of British Columbia (UBC)"], faculties = ["Applied Science", "Architecture and Landscape Architecture", "Arts", "Audiology and Speech Sciences", "Business", "Community and Regional Planning", "Dentistry", "Economics", "Education", "Extended Learning", "Forestry", "Journalism", "Kinesiology", "Land and Food Systems", "Law", "Library, Archival and Information Studies", "Medicine", "Music", "Nursing", "Pharmaceutical Sciences", "Population and Public Health", "Science", "Social Work", "UBC Vantage College"], 
+	
+	majors = ["Accounting", "Anthropology", "Applied Biology", "Architecture", "Art History, Visual Art and Theory", "Arts One", "Asian Research", "Asian Studies", "Astronomy", "Audiology and Speech Sciences", "Bachelor of Commerce", "Behavioural Neuroscience", "Biochemistry", "Biology", "Biomedical Engineering", "Canadian International Resources and Development Institute", "Cellular, Anatomical & Physiological Sciences", "Central Eastern Northern European Studies", "Chemical and Biological Engineering", "Chemistry", "Civil Engineering", "Classical, Near Eastern and Religious Studies", "Co-ordinated Arts Program", "Cognitive Systems", "Community and Regional Planning", "Computer Science", "Creative Writing Program", "Critical Studies in Sexuality", "Earth and Ocean Sciences", "Electrical and Computer Engineering", "Engineering Physics", "English Language & Literatures", "Environment Design", "Environmental Engineering", "European Studies", "Executive Education", "Family Practice", "Finance", "First Nations Languages Program", "First Nations Studies Program", "Food and Resource Economics", "Food, Nutrition and Health", "Forest Sciences", "Forestry", "French, Hispanic, & Italian Studies", "Gender, Race, Sexuality and Social Justice", "Geography", "Geological Engineering", "Global Resource Systems", "History", "Integrated Engineering", "International Relations", "International Reporting Program", "Journalism", "Kinesiology", "Landscape Architecture", "Law", "Library, Archival and Information Studies", "Linguistics", "Liu Institute for Global Issues", "Management Information Systems", "Marketing", "Materials Engineering", "Mathematics", "Mechanical Engineering", "Media Studies", "Medical Education", "Medicine", "Microbiology and Immunology", "Midwifery", "Mining Engineering", "Museum of Anthropology", "Music", "Music", "Neuroscience", "Nursing", "Obstetrics and Gynecology", "Operations and Logistics", "Organizational Behaviour and Human Resources", "Pediatrics", "Pharmaceutical Sciences", "Philosophy", "Physics", "Physics and Computer Science", "Physics and Oceanography", "Political Science", "Psychology", "Public Policy and Global Affairs", "Real Estate Division", "Social Work", "Sociology", "Statistics", "Strategy and Business Economics", "Study of Democratic Institutions", "Surgery", "Theatre and Film", "Urologic Sciences", "Vancouver School of Economics", "Zoology"] %>		
 
 <div class="container mb-4">
 	<div class="row justify-content-center">
@@ -47,7 +40,7 @@
 				<div class="form-row">
 					<div class="form-group col-md-4">
 						<label>School</label>
-						<select class="form-control" name="user[school]" required>
+						<select class="form-control custom-select" name="user[school]" required>
 							<% schools.forEach((school) => { %>
 								<option value="<%=school%>" 
 										<% if(user.school === school) { %> selected <%}%>>
@@ -58,7 +51,7 @@
 					</div>
 					<div class="form-group col-md-4">
 						<label>Faculty</label>
-						<select class="form-control" name="user[faculty]" required>
+						<select class="form-control custom-select" name="user[faculty]" required>
 							<% faculties.forEach((faculty) => { %>
 								<option value="<%=faculty%>" 
 										<% if(user.faculty === faculty) { %> selected <%}%>>
@@ -69,20 +62,25 @@
 					</div>
 					<div class="form-group col-md-4">
 						<label>Major</label>
-						<select class="form-control" name="user[major]" required>
+						<select class="form-control custom-select selectMajor" name="user[major]" required>
 							<% majors.forEach((major) => { %>
 								<option value="<%=major%>" 
 										<% if(user.major === major) { %> selected <%}%>>
 									<%= major %>
 								</option>
 							<% }); %>
+							<option value="Other">Other</option>
 						</select>
-					</div>
+						<div class="input-group mt-2">
+							<input type="text" class="form-control specifyMajor" placeholder="Please specify major..." 
+								   name="otherMajor">
+						</div>
+					</div>					
 				</div>
 				
 				<div class="form-group">
 					<label>Expected Graduation</label>
-					<select class="form-control" name="user[graduation]" required>
+					<select class="form-control custom-select" name="user[graduation]" required>
 						<% for(let i=0; i < 10; i++) {
 							var val = moment().add(i, 'Y').format('YYYY'); %>
 						<option value="<%= val %>" <% if(moment(user.graduation).format('YYYY') == val) { %> selected <% } %>>

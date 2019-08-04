@@ -14,13 +14,13 @@ $('.custom-file-input').on('change', function() {
 });
 
 // Show input to specify "other" major
-$('#selectMajor').on('change', function() {
+$('.selectMajor').on('change', function() {
 	if ($(this).val() === 'Other') {
-		$('#specifyMajor').show();
-		$('#specifyMajor').prop('required', true);
+		$('.specifyMajor').show();
+		$('.specifyMajor').prop('required', true);
 	} else {
-		$('#specifyMajor').hide();
-		$('#specifyMajor').prop('required', false);
+		$('.specifyMajor').hide();
+		$('.specifyMajor').prop('required', false);
 	}
 });
 

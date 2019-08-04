@@ -58,7 +58,7 @@ router.get("/profile", middleware.isLoggedIn, (req, res) => {
 	}
 });
 
-// EDIT PROFILE
+// EDIT Profile
 router.get("/profile/edit", middleware.isLoggedIn, (req, res) => {
 	if (req.user.isEmployer)
 		res.render("users/edit-profile-employer", {user: req.user});
@@ -66,7 +66,7 @@ router.get("/profile/edit", middleware.isLoggedIn, (req, res) => {
 		res.render("users/edit-profile-student", {user: req.user});
 });
 
-// HANDLE EDIT PROFILE
+// UPDATE Profile
 const uploadFields = upload.fields([{ name: 'resume1', maxCount: 1 }, 
 									{ name: 'resume2', maxCount: 1 }, 
 									{ name: 'resume3', maxCount: 1 }]);
@@ -93,6 +93,9 @@ router.post("/profile/edit", middleware.isLoggedIn, (req, res) => {
 				req.user.save();
 			}
 		}
+		
+		if (req.body.user.major === 'Other')
+			req.body.user.major = req.body.otherMajor;
 		
 		User.findByIdAndUpdate(req.user._id, req.body.user, (err, user) => {
 			if (err) {
