@@ -39,7 +39,7 @@ router.get("/jobs", (req, res) => {
 	var lim = 2;
 	var page = 0;
 	
-	let paidQuery, commitmentQuery, paid, commitment, filterExists = true;
+	let paidQuery, commitmentQuery, grantQuery, paid, commitment, grant, filterExists = true;
 	if (req.query.paid && !req.query.commitment) {	// Filters: only PAID
 		paidQuery = { paid: req.query.paid };
 		commitmentQuery = {};
@@ -63,6 +63,14 @@ router.get("/jobs", (req, res) => {
 		filterExists = false;
 	}
 	
+	if (req.query.grant) {
+		grant = true;
+		grantQuery = { grant: true};
+	} else {
+		grant = false;
+		grantQuery = {};
+	}
+	
 	// IF SEARCH QUERY EXISTS
 	if (req.query.search) {
 		if (req.query.p) {
@@ -73,14 +81,14 @@ router.get("/jobs", (req, res) => {
 		
 		Job.find({$and: [
 			{status: "public"},
-			paidQuery, commitmentQuery,
+			paidQuery, commitmentQuery, grantQuery,
 			{$or: [{company: regex,}, {role: regex}, {description: regex}]}]})
 			.sort([['createdAt', -1]])
 			.skip(lim * page).limit(lim).exec(function(err, jobs) {
 			
 			Job.countDocuments({$and: [
 			{status: "public"},
-			paidQuery, commitmentQuery,
+			paidQuery, commitmentQuery, grantQuery,
 			{$or: [{company: regex,}, {role: regex}, {description: regex}]}]}).exec((err, count) => {
 				if (err) {
 					console.log(err);
@@ -92,6 +100,7 @@ router.get("/jobs", (req, res) => {
 						search: req.query.search,
 						paid: paid,
 						commitment: commitment,
+						grant: grant,
 						filterExists: filterExists,
 						pages: Math.ceil(count / lim),
 						currPage: page+1
@@ -104,13 +113,13 @@ router.get("/jobs", (req, res) => {
 			page = req.query.p - 1;
 		}
 		
-		Job.find({$and: [{ status: 'public' }, paidQuery, commitmentQuery]})
+		Job.find({$and: [{ status: 'public' }, paidQuery, commitmentQuery, grantQuery]})
 		.sort([['createdAt', -1]])
 		.skip(lim * page)
 		.limit(lim)
 		.exec(function(err, jobs) {
 			Job.countDocuments({
-				$and: [{ status: 'public' }, paidQuery, commitmentQuery]}).exec((err, count) => {
+				$and: [{ status: 'public' }, paidQuery, commitmentQuery, grantQuery]}).exec((err, count) => {
 				if (err) {
 					console.log(err);
 					req.flash('error', err.message);
@@ -121,6 +130,7 @@ router.get("/jobs", (req, res) => {
 						search: false,
 						paid: paid,
 						commitment: commitment,
+						grant: grant,
 						filterExists: filterExists,
 						pages: Math.ceil(count / lim),
 						currPage: page + 1
@@ -139,9 +149,14 @@ router.get("/jobs/new", middleware.isLoggedIn, middleware.isEmployer, middleware
 // CREATE job
 router.post("/jobs", middleware.isLoggedIn, middleware.isEmployer, middleware.isVerified, (req, res) => {
 	req.body.job.description = req.sanitize(req.body.job.description);
-	if (typeof req.body.job.term !== 'string') {
+	if (typeof req.body.job.term !== 'string')
 		req.body.job.term = req.body.job.term.join(' & ');
-	}
+	
+	if (req.body.job.grant === 'on') 
+		req.body.job.grant = true;
+	else 
+		req.body.job.grant = false;
+	
 	var newJob = req.body.job;
 	newJob.owner = req.user;
 	
@@ -222,12 +237,19 @@ router.get("/jobs/:id/edit", middleware.isLoggedIn, middleware.isEmployer, middl
 // UPDATE job
 router.put("/jobs/:id", middleware.isLoggedIn, middleware.isEmployer, middleware.checkJobOwnership, (req, res) => {
 	req.body.job.description = req.sanitize(req.body.job.description);
-	if (typeof req.body.job.term !== 'string' && typeof req.body.job.term !== 'undefined') {
-		req.body.job.term = req.body.job.term.join(' & ');
-	}
-	if (typeof req.body.job.term === 'undefined') {
+	
+	if (typeof req.body.job.term === 'undefined') 
 		req.body.job.term = "";
-	}
+	
+	
+	if (typeof req.body.job.term !== 'string' && typeof req.body.job.term !== 'undefined') 
+		req.body.job.term = req.body.job.term.join(' & ');
+	
+	if (req.body.job.grant === 'on')
+		req.body.job.grant = true;
+	else
+		req.body.job.grant = false;
+	
 	
 	Job.findByIdAndUpdate(req.params.id, req.body.job, (err, job) => {
 		if (err) {

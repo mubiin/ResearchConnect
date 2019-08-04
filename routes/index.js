@@ -67,8 +67,12 @@ router.post("/register/student", [
 			"error": "Passwords do not match!"
 		});
 	}
+	
+	if (req.body.major === 'Other') {
+		req.body.major = req.body.otherMajor;
+	}
 
-	var newUser = new User({
+	const newUser = new User({
 		email: req.body.email, 
 		firstName: req.body.firstName,
 		middleName: req.body.middleName,

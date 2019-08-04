@@ -1,7 +1,7 @@
 <% include ../partials/header %> 
-<title>Browse Postings - ResearchConnect</title>
+<title>Browse Positions - ResearchConnect</title>
 
-<% let searchQuery = "", paidQuery = "", commitmentQuery = "";
+<% let searchQuery = "", paidQuery = "", commitmentQuery = "", grantQuery = "";
 if (search) {
 	searchQuery = "search=" + search + "&";
 } 
@@ -11,12 +11,15 @@ if (paid) {
 if (commitment) {
 	commitmentQuery = "commitment=" + commitment + "&";
 }
+if (grant) {
+	grantQuery = "grant=on&"; 
+}
 %>
 
 
 <div class="container">
 	<h2>
-		Browse positions: 
+		Browse Positions: 
 		<% if (currentUser && currentUser.isEmployer) { %>
 			<a href="/jobs/new" id="addIcon" class="ml-auto"><i class="fas fa-plus-square"></i></a>
 			<span class="lead m-0 p-0" id="addJob">Add new posting</span>
@@ -51,11 +54,10 @@ if (commitment) {
 	<hr>
 	<nav>
 		<ul class="pagination justify-content-center m-1">
-			<!-- <span class="lead mr-2 align-self-center">Pages:</span> -->
 			<% for(var i=1; i <= pages; i++) { 
 				var active = ""; if (i == currPage) active = "active"; %>
 				<li class="page-item <%=active%>">
-				<a class="page-link" href="/jobs?<%=searchQuery%><%=paidQuery%><%=commitmentQuery%>p=<%= i %>">
+				<a class="page-link" href="/jobs?<%=searchQuery%><%=paidQuery%><%=commitmentQuery%><%=grantQuery%>p=<%= i %>">
 					<%= i %>
 				</a>
 			</li>

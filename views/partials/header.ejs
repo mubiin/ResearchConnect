@@ -30,11 +30,11 @@ if (currentPath == "/") {
 	
 	<link rel="stylesheet" href="/stylesheets/style.css">
 	
-	<link rel="icon" href="/logo/logo.png">
+	<link rel="icon" href="/images/logo_browser.png">
 	
 	<script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=ihunqbym9mdtnh064h6nft1g4d63ze2mm4y3ljjv0hrfavtd"></script>
 </head>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 mb-lg-5 fixed-top">
+	<nav class="navbar navbar-expand-lg navbar-dark mb-4 mb-lg-5 fixed-top" style="background-color: #37615e;">
 		<div class="container" id="navbar-container">
 			<a class="navbar-brand" href="/">ResearchConnect</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" 
@@ -51,16 +51,16 @@ if (currentPath == "/") {
 					<a class="nav-link" href="/jobs">Jobs</a>
 				</li>
 				<form class="form-inline my-2 my-lg-0 mr-sm-2 ml-md-2" action="/jobs" method="GET">
-					<input class="form-control mr-sm-1" type="search" name="search" placeholder="Search postings" aria-label="Search" 
+					<input class="form-control mr-sm-1" type="search" name="search" placeholder="Search positions" aria-label="Search" 
 					<% if (typeof search !== 'undefined' && search) { %> value="<%=search%>" <% } %>>
 					
 					<div class="dropdown mr-2">
-						<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" 
+						<button class="btn text-white dropdown-toggle" type="button" id="dropdownMenuButton" 
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							Filters
 						</button>
 						
-						<% let checkPaid, checkVol, checkFull, checkPart, checkOne; 
+						<% let checkPaid, checkVol, checkFull, checkPart, checkOne, checkGrant; 
 						if (typeof paid !== 'undefined' && paid) {
 							if (paid === "Paid") checkPaid = "checked";
 							else checkVol = "checked";
@@ -69,20 +69,25 @@ if (currentPath == "/") {
 							if (commitment === "Full-time") checkFull = "checked";
 							else if (commitment === "Part-time") checkPart = "checked";
 							else checkOne = "checked";
+						}
+						if (typeof grant !== 'undefined' && grant) {
+							checkGrant = "checked";
 						} %>
 						
 						<div class="dropdown-menu bg-light">
 							<p class="text-center mb-1 font-weight-bold">Paid/Volunteer</p>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="paid" id="paid1" value="Paid" <%=checkPaid%>>
+								<input class="form-check-input" type="radio" name="paid" id="paid1" 
+									   value="Paid" <%=checkPaid%>>
 								<label class="form-check-label" for="paid1">Paid</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="paid" id="paid2" value="Volunteer" <%=checkVol%>>
+								<input class="form-check-input" type="radio" name="paid" id="paid2" 
+									   value="Volunteer" <%=checkVol%>>
 								<label class="form-check-label" for="paid2">Volunteer</label>
 							</div>
 							
-							<hr>
+							<hr class="mx-2 my-1">
 							
 							<p class="text-center mb-1 font-weight-bold">Commitment</p>
 							<div class="form-check form-check-inline">
@@ -96,16 +101,25 @@ if (currentPath == "/") {
 								<label class="form-check-label" for="part">Part Time</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="commitment" id="one" value="One-off" <%=checkOne%>>
+								<input class="form-check-input" type="radio" name="commitment" id="one" 
+									   value="One-off" <%=checkOne%>>
 								<label class="form-check-label" for="one">One-off</label>
 							</div>
+							
+							<hr class="mx-2 my-1">
+							
+							<p class="text-center mb-1 font-weight-bold">Award/Grant</p>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="grant" id="grant" <%=checkGrant%>>
+								<label class="form-check-label" for="grant">Grant Eligible</label>
+							</div>			
 							
 							<% if (typeof filterExists !== 'undefined' && filterExists) { %>
 							<hr class="mb-1">
 							<div class="text-center">
 								<% let searchQuery = "/jobs"; 
 								if (typeof search !== 'undefined' && search) {
-									searchQuery = "/jobs?search=" + search;								
+									searchQuery = "/jobs?search=" + search;	
 								} %>
 								<a href="<%=searchQuery%>" id="resetFilter">Reset Filters</a>
 							</div>
@@ -115,15 +129,13 @@ if (currentPath == "/") {
 					<button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
 				</form>				
 			</ul>
-			
-			
 
 			<ul class="navbar-nav ml-auto">
 				
 				<% if (!currentUser) { %>
 				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle <%=activeSignup%>" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" 
-						aria-expanded="false">Signup</a>
+					<a class="nav-link dropdown-toggle <%=activeSignup%>" data-toggle="dropdown" href="#" 
+					   role="button" aria-haspopup="true" aria-expanded="false">Signup</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="/register/student" id="menuStudent">Student</a>
 							<a class="dropdown-item" href="/register/employer">Employer</a>
@@ -131,8 +143,8 @@ if (currentPath == "/") {
 					</li>
 					
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle <%=activeLogin%>" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" 
-							aria-expanded="false">Login</a>
+						<a class="nav-link dropdown-toggle <%=activeLogin%>" data-toggle="dropdown" href="#" 
+						   role="button" aria-haspopup="true" aria-expanded="false">Login</a>
 							<div class="dropdown-menu">
 								<a class="dropdown-item" href="/login/student">Student</a>
 								<a class="dropdown-item" href="/login/employer">Employer</a>

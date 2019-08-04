@@ -78,8 +78,12 @@
 
 				<div class="card-body">
 					<h5 class="mb-0">Job Description:</h5>
-					<p class="lead"><%= job.workLoad %> • <%= job.paid%> 
-						<% if (job.term !== "") { %> • <% } %> <%= job.term%></p>
+					<p class="lead">
+						<%= job.workLoad %> • <%= job.paid %> 
+						<% if (job.grant) { %> • Award/Grant Eligible <% } %>
+						<% if (job.term !== "") { %> • <%= job.term %> <% } %> 
+					</p>
+					
 					<hr>
 					<p><%- job.description %></p>
 					<% if (isAuthorized) { %>

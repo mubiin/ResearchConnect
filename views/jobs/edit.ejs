@@ -24,6 +24,12 @@ switch(job.paid) {
 		break;
 }
 
+let activeGrant, checkGrant;
+if (job.grant) {
+	activeGrant = "active";
+	checkGrant = "checked"; 
+}
+
 let activeW1, checkW1, activeW2, checkW2, activeS1, checkS1, activeS2, checkS2;
 if (job.term.includes("Winter T1")) {
 	activeW1 = "active";
@@ -41,21 +47,6 @@ if (job.term.includes("Summer T2")) {
 	activeS2 = "active";
 	checkS2 = "checked";
 }
-
-// switch(job.term) {
-// 	case "Winter T1": 
-// 		activeW1 = "active", checkW1 = "checked", activeW2="",checkW2="",activeS1="",checkS1="",activeS2="",checkS2="";
-// 		break;
-// 	case "Winter T2":
-// 		activeW1 = "",checkW1 = "", activeW2="active", checkW2="checked", activeS1="",checkS1="",activeS2="",checkS2="";
-// 		break;
-// 	case "Summer T1":
-// 		activeW1 = "",checkW1 = "",activeW2="",checkW2="", activeS1="active", checkS1="checked", activeS2="",checkS2="";
-// 		break;
-// 	case "Summer T2":
-// 		activeW1 = "",checkW1 = "",activeW2="",checkW2="",activeS1="",checkS1="", activeS2="active", checkS2="checked";
-// 		break;		
-// }
 %>
 
 <div class="container border rounded py-4 px-5">
@@ -107,6 +98,12 @@ if (job.term.includes("Summer T2")) {
 				<label class="btn btn-outline-primary btn-sm <%=activeVol%>">
 					<input type="radio" name="job[paid]" value="Volunteer" <%=checkVol%> required>Volunteer
 				</label>	
+			</div>
+			
+			<div class="btn-group btn-group-toggle mb-2 mr-2" data-toggle="buttons">
+				<label class="btn btn-outline-primary btn-sm <%=activeGrant%>">
+					<input type="checkbox" name="job[grant]" <%=checkGrant%> required>Award/Grant Eligible
+		  		</label>
 			</div>
 			
 			<div class="btn-group btn-group-toggle mb-2" data-toggle="buttons">

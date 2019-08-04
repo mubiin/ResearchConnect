@@ -7,6 +7,7 @@ var jobSchema = mongoose.Schema({
 	workLoad: {type: String, required: true},
 	paid: {type: String},
 	term: {type: String},
+	grant: {type: Boolean},
 	description: {type: String, required: true},
 	createdAt: {type: Date, default: Date.now},
 	deadline: {type: Date, required: true},

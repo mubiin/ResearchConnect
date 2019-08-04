@@ -13,6 +13,17 @@ $('.custom-file-input').on('change', function() {
         .html(fileName);
 });
 
+// Show input to specify "other" major
+$('#selectMajor').on('change', function() {
+	if ($(this).val() === 'Other') {
+		$('#specifyMajor').show();
+		$('#specifyMajor').prop('required', true);
+	} else {
+		$('#specifyMajor').hide();
+		$('#specifyMajor').prop('required', false);
+	}
+});
+
 // Show "save" button after application status update
 $('.change-status').on('change', function() {
 	$(this).next(".save-status").show();
