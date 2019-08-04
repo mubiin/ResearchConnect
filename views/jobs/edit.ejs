@@ -2,51 +2,59 @@
 <title>Edit Posting: <%=job.role%> - ResearchConnect</title>
 
 <% let activeFull, activePart, checkFull, checkPart, activeOne, checkOne;
-switch(job.workLoad) {
-	case "Full-time":
-		activeFull = "active", checkFull = "checked", activePart = "", checkPart = "", activeOne = "", checkOne = "";
-		break;
-	case "Part-time":
-		activeFull = "", checkFull = "", activePart = "active", checkPart = "checked", activeOne = "", checkOne = "";
-		break;
-	case "One-off":
-		activeFull = "", checkFull = "", activePart = "", checkPart = "", activeOne = "active", checkOne = "checked";
-		break;		
+if (typeof job.workLoad !== 'undefined') {
+	switch(job.workLoad) {
+		case "Full-time":
+			activeFull = "active", checkFull = "checked", activePart = "", checkPart = "", activeOne = "", checkOne = "";
+			break;
+		case "Part-time":
+			activeFull = "", checkFull = "", activePart = "active", checkPart = "checked", activeOne = "", checkOne = "";
+			break;
+		case "One-off":
+			activeFull = "", checkFull = "", activePart = "", checkPart = "", activeOne = "active", checkOne = "checked";
+			break;		
+	}
 }
 
 let activePaid, checkPaid, activeVol, checkVol;
-switch(job.paid) {
-	case "Paid":
-		activePaid = "active", checkPaid = "checked", activeVol = "", checkVol = "";
-		break;
-	case "Volunteer":
-		activePaid = "", checkPaid = "", activeVol = "active", checkVol = "checked";
-		break;
+if (typeof job.paid != 'undefined') {
+	switch(job.paid) {
+		case "Paid":
+			activePaid = "active", checkPaid = "checked", activeVol = "", checkVol = "";
+			break;
+		case "Volunteer":
+			activePaid = "", checkPaid = "", activeVol = "active", checkVol = "checked";
+			break;
+	}
 }
 
+
 let activeGrant, checkGrant;
-if (job.grant) {
+if (typeof job.grant !== 'undefined' && job.grant) {
 	activeGrant = "active";
 	checkGrant = "checked"; 
 }
 
 let activeW1, checkW1, activeW2, checkW2, activeS1, checkS1, activeS2, checkS2;
-// if (job.term.includes("Winter T1")) {
-// 	activeW1 = "active";
-// 	checkW1 = "checked";
-// }
-// if (job.term.includes("Winter T2")) { 
-// 	activeW2 = "active";
-// 	checkW2 = "checked";
-// }
-// if (job.term.includes("Summer T1")) { 
-// 	activeS1 = "active";
-// 	checkS1 = "checked";
-// }
-// if (job.term.includes("Summer T2")) { 
-// 	activeS2 = "active";
-// 	checkS2 = "checked";
-// }
+if (typeof job.term !== 'undefined') {
+	if (job.term.includes("Winter T1")) {
+		activeW1 = "active";
+		checkW1 = "checked";
+	}
+	if (job.term.includes("Winter T2")) { 
+		activeW2 = "active";
+		checkW2 = "checked";
+	}
+	if (job.term.includes("Summer T1")) { 
+		activeS1 = "active";
+		checkS1 = "checked";
+	}
+	if (job.term.includes("Summer T2")) { 
+		activeS2 = "active";
+		checkS2 = "checked";
+	}	
+}
+
 %>
 
 <div class="container border rounded py-4 px-5">
