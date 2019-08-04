@@ -31,22 +31,22 @@ if (job.grant) {
 }
 
 let activeW1, checkW1, activeW2, checkW2, activeS1, checkS1, activeS2, checkS2;
-if (job.term.includes("Winter T1")) {
-	activeW1 = "active";
-	checkW1 = "checked";
-}
-if (job.term.includes("Winter T2")) { 
-	activeW2 = "active";
-	checkW2 = "checked";
-}
-if (job.term.includes("Summer T1")) { 
-	activeS1 = "active";
-	checkS1 = "checked";
-}
-if (job.term.includes("Summer T2")) { 
-	activeS2 = "active";
-	checkS2 = "checked";
-}
+// if (job.term.includes("Winter T1")) {
+// 	activeW1 = "active";
+// 	checkW1 = "checked";
+// }
+// if (job.term.includes("Winter T2")) { 
+// 	activeW2 = "active";
+// 	checkW2 = "checked";
+// }
+// if (job.term.includes("Summer T1")) { 
+// 	activeS1 = "active";
+// 	checkS1 = "checked";
+// }
+// if (job.term.includes("Summer T2")) { 
+// 	activeS2 = "active";
+// 	checkS2 = "checked";
+// }
 %>
 
 <div class="container border rounded py-4 px-5">
@@ -102,7 +102,7 @@ if (job.term.includes("Summer T2")) {
 			
 			<div class="btn-group btn-group-toggle mb-2 mr-2" data-toggle="buttons">
 				<label class="btn btn-outline-primary btn-sm <%=activeGrant%>">
-					<input type="checkbox" name="job[grant]" <%=checkGrant%> required>Award/Grant Eligible
+					<input type="checkbox" name="job[grant]" <%=checkGrant%>>Award/Grant Eligible
 		  		</label>
 			</div>
 			
