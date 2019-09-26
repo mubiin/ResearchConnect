@@ -30,6 +30,12 @@ app.use(methodOverride("_method"));
 app.use(cookieParser('secret'));
 app.use(expressSanitizer());
 app.use(flash());
+app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https')
+      res.redirect(`https://${req.header('host')}${req.url}`);
+    else
+      next();
+ });
 
 app.locals.moment = require('moment');
 app.locals._ = _;
