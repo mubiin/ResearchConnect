@@ -93,35 +93,35 @@ router.post("/register/student", [
 		passport.authenticate("local")(req, res, () => {
 			req.flash('success', 'Welcome to ResearchConnect!');
 			res.redirect("/jobs");
-			// crypto.randomBytes(20, (err, buf) => {
-			// 	if (err) {
-			// 		console.log(err);
-			// 		req.flash('error', "Error creating password reset token!");
-			// 		return res.redirect("/forgot");
-			// 	}
-			// 	var token = buf.toString('hex');
-			// 	user.verificationToken = token;
-			// 	user.save();
-			// 	var mailData = {
-			// 	  from: 'ResearchConnect <donotreply@researchconnect.com>',
-			// 	  to: req.body.email,
-			// 	  subject: 'Verify your email',
-			// 	  text:
-			// 		'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
-			// 		'https://' + req.headers.host + '/verify/' + token + '\n'
-			// 	};
+			crypto.randomBytes(20, (err, buf) => {
+				if (err) {
+					console.log(err);
+					req.flash('error', "Error creating password reset token!");
+					return res.redirect("/forgot");
+				}
+				var token = buf.toString('hex');
+				user.verificationToken = token;
+				user.save();
+				var mailData = {
+				  from: 'ResearchConnect <donotreply@researchconnect.com>',
+				  to: req.body.email,
+				  subject: 'Verify your email',
+				  text:
+					'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
+					'https://' + req.headers.host + '/verify/' + token + '\n'
+				};
 
-			// 	mailgun.messages().send(mailData, function (error, body) {
-			// 		if (error) {
-			// 			req.flash('error', "Error sending verification email");
-			// 			res.redirect('back');
-			// 		}
-			// 		else {
-			// 			req.flash('success', 'Please verify your email to start applying!');
-			// 			res.redirect("/verify");
-			// 		}
-			// 	});
-			// });
+				mailgun.messages().send(mailData, function (error, body) {
+					if (error) {
+						req.flash('error', "Error sending verification email");
+						res.redirect('back');
+					}
+					else {
+						req.flash('success', 'Please verify your email to start applying!');
+						res.redirect("/verify");
+					}
+				});
+			});
 			
 		});
 	});
@@ -183,35 +183,35 @@ router.post("/register/employer", [
 		passport.authenticate("local")(req, res, () => {
 			req.flash('success', 'Welcome to ResearchConnect!');
 			res.redirect("/jobs");
-			// crypto.randomBytes(20, (err, buf) => {
-			// 	if (err) {
-			// 		console.log(err);
-			// 		req.flash('error', "Error creating password reset token!");
-			// 		return res.redirect("/forgot");
-			// 	}
-			// 	var token = buf.toString('hex');
-			// 	user.verificationToken = token;
-			// 	user.save();
-			// 	var mailData = {
-			// 	  from: 'ResearchConnect <donotreply@researchconnect.com>',
-			// 	  to: req.body.email,
-			// 	  subject: 'Verify your email',
-			// 	  text: 
-			// 		'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
-			// 		'https://' + req.headers.host + '/verify/' + token + '\n'
-			// 	};
+			crypto.randomBytes(20, (err, buf) => {
+				if (err) {
+					console.log(err);
+					req.flash('error', "Error creating password reset token!");
+					return res.redirect("/forgot");
+				}
+				var token = buf.toString('hex');
+				user.verificationToken = token;
+				user.save();
+				var mailData = {
+				  from: 'ResearchConnect <donotreply@researchconnect.com>',
+				  to: req.body.email,
+				  subject: 'Verify your email',
+				  text: 
+					'Please verify your email by clicking the following link, or pasting it into your browser:\n\n' +
+					'https://' + req.headers.host + '/verify/' + token + '\n'
+				};
 
-			// 	mailgun.messages().send(mailData, function (error, body) {
-			// 		if (error) {
-			// 			req.flash('error', "Error sending verification email");
-			// 			res.redirect('back');
-			// 		}
-			// 		else {
-			// 			req.flash('success', 'Please verify your email to start posting!');
-			// 			res.redirect("/verify");
-			// 		}
-			// 	});
-			// });
+				mailgun.messages().send(mailData, function (error, body) {
+					if (error) {
+						req.flash('error', "Error sending verification email");
+						res.redirect('back');
+					}
+					else {
+						req.flash('success', 'Please verify your email to start posting!');
+						res.redirect("/verify");
+					}
+				});
+			});
 		});
 	});
 });
@@ -442,7 +442,7 @@ router.post("/forgot", (req, res) => {
 			  from: 'ResearchConnect <donotreply@researchconnect.com>',
 			  to: user.email,
 			  subject: 'Reset your password',
-			  text: 'You are receiving this because you (or someone else) have requested the reset of the password for your ResearchConnect account.\n\n' + 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+			  text: 'Please click the following link to reset your ResearchConnect password:\n\n' +
 				'https://' + req.headers.host + '/reset/' + token + '\n\n' + 
 				'If you did not request this, please ignore this email and your password will remain unchanged.\n'
 			};
